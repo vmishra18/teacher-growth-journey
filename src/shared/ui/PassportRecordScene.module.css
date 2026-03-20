@@ -1,0 +1,94 @@
+.scene {
+  position: relative;
+  width: min(100%, 33rem);
+  margin-inline: auto;
+}
+
+.glow {
+  position: absolute;
+  inset: auto 8% 8% auto;
+  width: 11rem;
+  height: 11rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 164, 86, 0.22), transparent 70%);
+  filter: blur(18px);
+}
+
+.shadow {
+  position: absolute;
+  inset: auto 12% 1% 12%;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(29, 39, 64, 0.12), transparent 72%);
+  filter: blur(14px);
+}
+
+.sceneSvg {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+  z-index: 1;
+}
+
+.board {
+  transform-origin: center;
+  animation: boardLift 7.8s ease-in-out infinite;
+}
+
+.reflectionCard {
+  transform-origin: center;
+  animation: cardDrift 7s ease-in-out infinite;
+}
+
+.evidenceCard {
+  transform-origin: center;
+  animation: cardDrift 8s ease-in-out infinite reverse;
+}
+
+.goalCard {
+  transform-origin: center;
+  animation: chipFloat 6.4s ease-in-out infinite;
+}
+
+@keyframes boardLift {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes cardDrift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -7px, 0);
+  }
+}
+
+@keyframes chipFloat {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -4px, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .board,
+  .reflectionCard,
+  .evidenceCard,
+  .goalCard {
+    animation: none;
+  }
+}

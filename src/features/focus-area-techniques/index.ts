@@ -1,0 +1,1 @@
+export { TechniqueCard } from './TechniqueCard';

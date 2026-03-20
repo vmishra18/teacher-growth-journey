@@ -1,0 +1,113 @@
+.scene {
+  position: relative;
+  width: min(100%, 30rem);
+  margin-inline: auto;
+}
+
+.baseGlow {
+  position: absolute;
+  inset: auto 12% 6% 12%;
+  height: 7rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 164, 86, 0.22), transparent 72%);
+  filter: blur(18px);
+}
+
+.sceneSvg {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+  z-index: 1;
+}
+
+.shell,
+.kpiCard,
+.miniCard {
+  transform-origin: center;
+  animation: floatCard 7.5s ease-in-out infinite;
+}
+
+.grid {
+  animation: fadeGrid 6s ease-in-out infinite;
+}
+
+.bars rect {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: growBars 4.8s ease-in-out infinite;
+}
+
+.bars rect:nth-child(2) {
+  animation-delay: 0.16s;
+}
+
+.bars rect:nth-child(3) {
+  animation-delay: 0.32s;
+}
+
+.bars rect:nth-child(4) {
+  animation-delay: 0.48s;
+}
+
+.trend {
+  animation: pulseLine 5.8s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes floatCard {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes growBars {
+  0%,
+  100% {
+    transform: scaleY(0.94);
+    opacity: 0.8;
+  }
+
+  50% {
+    transform: scaleY(1.04);
+    opacity: 1;
+  }
+}
+
+@keyframes pulseLine {
+  0%,
+  100% {
+    opacity: 0.88;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeGrid {
+  0%,
+  100% {
+    opacity: 0.75;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shell,
+  .kpiCard,
+  .miniCard,
+  .grid,
+  .bars rect,
+  .trend {
+    animation: none;
+  }
+}

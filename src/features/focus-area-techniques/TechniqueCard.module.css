@@ -1,0 +1,154 @@
+.card {
+  display: grid;
+  gap: 1.15rem;
+  padding: 1.35rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background:
+    linear-gradient(180deg, rgba(37, 99, 235, 0.035), transparent 26%),
+    var(--surface);
+  box-shadow: var(--shadow-card);
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-soft);
+}
+
+.tried {
+  border-color: rgba(22, 163, 74, 0.26);
+  background:
+    linear-gradient(180deg, rgba(22, 163, 74, 0.06), transparent 28%),
+    var(--surface);
+}
+
+.saved {
+  border-color: rgba(37, 99, 235, 0.2);
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: start;
+}
+
+.headingBlock {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.sequence {
+  color: var(--text-soft);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 800;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.22rem;
+  letter-spacing: -0.02em;
+}
+
+.summary {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(240px, 0.85fr);
+  gap: 1rem;
+}
+
+.stepsPanel {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.subheading {
+  margin: 0;
+  font-size: 0.98rem;
+  letter-spacing: -0.01em;
+}
+
+.list {
+  margin: 0;
+  padding-left: 0;
+  color: var(--text-muted);
+  line-height: 1.7;
+  list-style: none;
+  counter-reset: technique-step;
+}
+
+.list li {
+  display: grid;
+  grid-template-columns: 1.8rem 1fr;
+  gap: 0.7rem;
+  align-items: start;
+}
+
+.list li + li {
+  margin-top: 0.7rem;
+}
+
+.list li::before {
+  counter-increment: technique-step;
+  content: counter(technique-step);
+  display: inline-grid;
+  place-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 999px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.example {
+  display: grid;
+  gap: 0.35rem;
+  align-content: start;
+  padding: 1rem 1.05rem;
+  border-radius: var(--radius-md);
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+}
+
+.exampleLabel {
+  color: var(--text-soft);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.exampleText {
+  margin: 0;
+  color: var(--text);
+  line-height: 1.65;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+@media (max-width: 780px) {
+  .contentGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .top {
+    flex-direction: column;
+  }
+}

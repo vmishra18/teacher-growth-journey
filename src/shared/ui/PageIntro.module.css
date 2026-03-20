@@ -1,0 +1,28 @@
+.intro {
+  display: grid;
+  gap: 0.95rem;
+}
+
+.eyebrow {
+  color: var(--primary);
+  font-size: 0.86rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.3rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.copy {
+  margin: 0;
+  color: var(--text-muted);
+  max-width: 66ch;
+  font-size: 1.03rem;
+  line-height: 1.7;
+}

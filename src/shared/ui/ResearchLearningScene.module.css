@@ -1,0 +1,103 @@
+.scene {
+  position: relative;
+  min-height: 360px;
+  overflow: visible;
+}
+
+.sceneSvg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.blob {
+  transform-origin: center;
+  animation: blobDrift 8.5s ease-in-out infinite;
+}
+
+.orbit {
+  transform-origin: center;
+  animation: orbitFloat 8.8s ease-in-out infinite;
+}
+
+.boardGroup,
+.sideCard,
+.noteCard,
+.pencil,
+.figureLeft,
+.figureRight {
+  transform-origin: center;
+  animation: contentFloat 7.2s ease-in-out infinite;
+}
+
+.sideCard {
+  animation-delay: 0.35s;
+}
+
+.noteCard {
+  animation-delay: 0.55s;
+}
+
+.figureLeft {
+  animation-delay: 0.8s;
+}
+
+.figureRight {
+  animation-delay: 0.95s;
+}
+
+@keyframes blobDrift {
+  0%,
+  100% {
+    transform: translate(0px, 0px);
+  }
+
+  50% {
+    transform: translate(4px, -8px);
+  }
+}
+
+@keyframes orbitFloat {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes contentFloat {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@media (max-width: 700px) {
+  .scene {
+    min-height: 280px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blob,
+  .orbit,
+  .boardGroup,
+  .sideCard,
+  .noteCard,
+  .pencil,
+  .figureLeft,
+  .figureRight {
+    animation: none;
+  }
+}
+
+:global(html[data-theme='dark']) .scene {
+  filter: saturate(0.96) brightness(0.95);
+}

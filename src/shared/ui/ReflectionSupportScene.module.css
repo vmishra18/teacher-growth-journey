@@ -1,0 +1,86 @@
+.scene {
+  position: relative;
+  width: min(100%, 25rem);
+  margin-inline: auto;
+}
+
+.shadow {
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: 2%;
+  height: 3rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(29, 39, 64, 0.12), transparent 72%);
+  filter: blur(12px);
+}
+
+.sceneSvg {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+  z-index: 1;
+}
+
+.book {
+  transform-origin: center;
+  animation: pageLift 8s ease-in-out infinite;
+}
+
+.noteCard {
+  transform-origin: center;
+  animation: noteBob 7.2s ease-in-out infinite;
+}
+
+.pencil {
+  transform-origin: 280px 220px;
+  animation: pencilTilt 6.4s ease-in-out infinite;
+}
+
+.chat {
+  transform-origin: center;
+  animation: noteBob 7.8s ease-in-out infinite reverse;
+}
+
+@keyframes pageLift {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes noteBob {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -6px, 0);
+  }
+}
+
+@keyframes pencilTilt {
+  0%,
+  100% {
+    transform: rotate(-18deg);
+  }
+
+  50% {
+    transform: rotate(-14deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .book,
+  .noteCard,
+  .pencil,
+  .chat {
+    animation: none;
+  }
+}

@@ -1,0 +1,240 @@
+@import url("https://use.typekit.net/wng2yug.css");
+
+:root {
+  --font-body: "futura-pt", Arial, Helvetica, sans-serif;
+  --font-display: "futura-pt", Arial, Helvetica, sans-serif;
+  --tracking-tight: -0.03em;
+  --tracking-heading: -0.02em;
+  --tracking-body: 0;
+  --background: #ffffff;
+  --background-muted: rgba(255, 255, 255, 0.94);
+  --surface: #fffefc;
+  --surface-strong: #ffffff;
+  --surface-elevated: #fffaf5;
+  --surface-muted: #f8f0e6;
+  --border: rgba(79, 93, 118, 0.16);
+  --border-strong: rgba(29, 39, 64, 0.22);
+  --text: #1d2740;
+  --text-muted: #4f5d76;
+  --text-soft: #768198;
+  --text-accent-muted: #64748b;
+  --surface-glass: rgba(255, 252, 247, 0.86);
+  --surface-glass-soft: rgba(255, 251, 246, 0.72);
+  --surface-glass-strong: rgba(255, 255, 255, 0.94);
+  --surface-hero: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 247, 238, 0.98));
+  --nav-surface: rgba(255, 250, 244, 0.72);
+  --nav-surface-hover: rgba(255, 255, 255, 0.92);
+  --main-overlay: linear-gradient(180deg, rgba(255, 251, 246, 0.72), rgba(255, 251, 246, 0));
+  --page-sheen: linear-gradient(180deg, rgba(255, 255, 255, 0.64), transparent 22%);
+  --frame-surface:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(255, 255, 255, 0.99)),
+    radial-gradient(circle at top right, rgba(29, 39, 64, 0.03), transparent 28%),
+    radial-gradient(circle at left 18%, rgba(229, 138, 43, 0.04), transparent 24%);
+  --main-canvas:
+    radial-gradient(circle at top right, rgba(29, 39, 64, 0.04), transparent 22%),
+    radial-gradient(circle at 15% 16%, rgba(229, 138, 43, 0.05), transparent 14%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.08));
+  --main-grid:
+    linear-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.1) 1px, transparent 1px);
+  --primary: #1f2d4d;
+  --primary-strong: #15213a;
+  --primary-soft: rgba(31, 45, 77, 0.08);
+  --accent-warm: #e58a2b;
+  --accent-warm-strong: #d97706;
+  --accent-warm-soft: rgba(229, 138, 43, 0.12);
+  --success: #16a34a;
+  --success-soft: rgba(22, 163, 74, 0.1);
+  --shell-topbar: rgba(255, 255, 255, 0.96);
+  --shell-sidebar: linear-gradient(180deg, #f4f8ff 0%, #f8fafc 42%, #f7f8fb 100%);
+  --shell-hint: rgba(37, 99, 235, 0.05);
+  --blue: var(--primary);
+  --amber: var(--accent-warm);
+  --green: #16a34a;
+  --accent: var(--primary);
+  --accent-strong: var(--primary-strong);
+  --accent-soft: var(--primary-soft);
+  --shadow: 0 30px 64px rgba(32, 22, 11, 0.08);
+  --shadow-soft: 0 16px 34px rgba(32, 22, 11, 0.06);
+  --shadow-card: 0 14px 30px rgba(29, 39, 64, 0.065);
+  --shadow-hover: 0 20px 40px rgba(29, 39, 64, 0.09);
+  --radius-xl: 30px;
+  --radius-lg: 22px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
+  --hero-mesh:
+    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.88), transparent 18%),
+    radial-gradient(circle at 82% 18%, rgba(255, 242, 228, 0.6), transparent 18%),
+    linear-gradient(135deg, rgba(31, 45, 77, 0.06), rgba(229, 138, 43, 0.08));
+  --page-gradient:
+    radial-gradient(circle at top left, rgba(229, 138, 43, 0.06), transparent 22%),
+    radial-gradient(circle at right top, rgba(31, 45, 77, 0.04), transparent 20%),
+    linear-gradient(180deg, #ffffff 0%, #ffffff 100%);
+}
+
+:root[data-theme='dark'] {
+  --background: #0f172a;
+  --background-muted: rgba(15, 23, 42, 0.88);
+  --surface: rgba(15, 23, 42, 0.96);
+  --surface-strong: rgba(30, 41, 59, 0.98);
+  --surface-elevated: rgba(30, 41, 59, 0.86);
+  --surface-muted: rgba(51, 65, 85, 0.55);
+  --border: rgba(203, 219, 227, 0.12);
+  --border-strong: rgba(203, 219, 227, 0.22);
+  --text: #edf4f8;
+  --text-muted: #c1ccd6;
+  --text-soft: #97a8b8;
+  --text-accent-muted: #a7b9d3;
+  --surface-glass: rgba(30, 41, 59, 0.76);
+  --surface-glass-soft: rgba(30, 41, 59, 0.62);
+  --surface-glass-strong: rgba(30, 41, 59, 0.88);
+  --surface-hero: linear-gradient(180deg, rgba(30, 41, 59, 0.86), rgba(15, 23, 42, 0.9));
+  --nav-surface: rgba(30, 41, 59, 0.78);
+  --nav-surface-hover: rgba(30, 41, 59, 0.94);
+  --main-overlay: linear-gradient(180deg, rgba(15, 23, 42, 0.46), rgba(15, 23, 42, 0));
+  --page-sheen: linear-gradient(180deg, rgba(148, 163, 184, 0.08), transparent 22%);
+  --frame-surface:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.9), rgba(8, 15, 28, 0.99)),
+    radial-gradient(circle at top right, rgba(96, 165, 250, 0.14), transparent 28%),
+    radial-gradient(circle at left 18%, rgba(244, 163, 64, 0.08), transparent 28%);
+  --main-canvas:
+    radial-gradient(circle at top right, rgba(96, 165, 250, 0.16), transparent 22%),
+    radial-gradient(circle at 16% 18%, rgba(244, 163, 64, 0.12), transparent 16%),
+    radial-gradient(circle at right top, rgba(59, 130, 246, 0.14), transparent 14%),
+    linear-gradient(180deg, rgba(15, 23, 42, 0.24), rgba(2, 6, 23, 0.18));
+  --main-grid:
+    linear-gradient(rgba(96, 165, 250, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(96, 165, 250, 0.08) 1px, transparent 1px);
+  --primary: #60a5fa;
+  --primary-strong: #3b82f6;
+  --primary-soft: rgba(96, 165, 250, 0.14);
+  --accent-warm: #f4a340;
+  --accent-warm-strong: #fb923c;
+  --accent-warm-soft: rgba(244, 163, 64, 0.16);
+  --success: #22c55e;
+  --success-soft: rgba(34, 197, 94, 0.14);
+  --shell-topbar: rgba(30, 41, 59, 0.94);
+  --shell-sidebar: linear-gradient(180deg, #172133 0%, #111827 100%);
+  --shell-hint: rgba(96, 165, 250, 0.1);
+  --accent: var(--primary);
+  --accent-strong: var(--primary-strong);
+  --accent-soft: var(--primary-soft);
+  --blue: var(--primary);
+  --amber: var(--primary);
+  --green: var(--success);
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.26);
+  --shadow-soft: 0 12px 30px rgba(0, 0, 0, 0.18);
+  --shadow-card: 0 8px 20px rgba(0, 0, 0, 0.14);
+  --hero-mesh:
+    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.14), transparent 18%),
+    radial-gradient(circle at 82% 18%, rgba(96, 165, 250, 0.16), transparent 18%),
+    linear-gradient(135deg, rgba(96, 165, 250, 0.12), rgba(244, 163, 64, 0.06));
+  --page-gradient:
+    radial-gradient(circle at top left, rgba(96, 165, 250, 0.14), transparent 30%),
+    radial-gradient(circle at right top, rgba(244, 163, 64, 0.14), transparent 22%),
+    radial-gradient(circle at 12% 82%, rgba(96, 165, 250, 0.08), transparent 18%),
+    linear-gradient(180deg, #09111f 0%, #0f172a 100%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: light;
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  font-weight: 400;
+  color: var(--text);
+  background:
+    var(--page-sheen),
+    radial-gradient(circle at 12% 16%, rgba(255, 255, 255, 0.28), transparent 12%),
+    var(--page-gradient);
+  background-attachment: fixed;
+  font-size: 16px;
+  line-height: 1.55;
+  letter-spacing: var(--tracking-body);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition:
+    color 180ms ease,
+    opacity 180ms ease;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: var(--tracking-heading);
+}
+
+:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.25);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: rgba(37, 99, 235, 0.18);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

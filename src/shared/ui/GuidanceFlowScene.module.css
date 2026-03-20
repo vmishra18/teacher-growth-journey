@@ -1,0 +1,109 @@
+.scene {
+  position: relative;
+  width: min(100%, 31rem);
+  margin-inline: auto;
+  padding: 0.6rem;
+}
+
+.orbit {
+  position: absolute;
+  inset: 8% 8% 8% 8%;
+  border: 3px solid rgba(35, 82, 59, 0.64);
+  border-radius: 50%;
+}
+
+.glow {
+  position: absolute;
+  inset: auto 10% 2% auto;
+  width: 10rem;
+  height: 10rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 164, 86, 0.24), transparent 68%);
+  filter: blur(18px);
+}
+
+.sceneSvg {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+  z-index: 1;
+}
+
+.centerStage {
+  animation: centerLift 7.6s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.evidenceCard,
+.techniqueCard,
+.reflectionCard {
+  animation: cardBob 7s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.techniqueCard {
+  animation-delay: 0.3s;
+}
+
+.reflectionCard {
+  animation-delay: 0.6s;
+}
+
+.connectors {
+  animation: connectorPulse 6.6s ease-in-out infinite;
+}
+
+@keyframes centerLift {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes cardBob {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes connectorPulse {
+  0%,
+  100% {
+    opacity: 0.72;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 720px) {
+  .scene {
+    width: min(100%, 27rem);
+    padding: 0.2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .centerStage,
+  .evidenceCard,
+  .techniqueCard,
+  .reflectionCard,
+  .connectors {
+    animation: none;
+  }
+}
+
+:global(html[data-theme='dark']) .orbit {
+  border-color: rgba(96, 165, 250, 0.38);
+}

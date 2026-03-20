@@ -1,0 +1,19 @@
+.field {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.label {
+  font-weight: 700;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 144px;
+  resize: vertical;
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-strong);
+  color: var(--text);
+}

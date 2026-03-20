@@ -1,0 +1,248 @@
+.header {
+  position: relative;
+  padding: 2.1rem 2.5rem;
+  border-radius: 0 0 28px 28px;
+  border: 1px solid var(--border);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 249, 241, 0.98)),
+    linear-gradient(90deg, rgba(229, 138, 43, 0.08), transparent 24%);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1600' height='340' viewBox='0 0 1600 340'%3E%3Cg fill='none' stroke='rgba(229,138,43,0.10)' stroke-width='2'%3E%3Cpath d='M0 34 C120 14 220 14 340 34 S560 54 680 34 900 14 1020 34 1240 54 1360 34 1480 14 1600 34'/%3E%3Cpath d='M0 74 C120 54 220 54 340 74 S560 94 680 74 900 54 1020 74 1240 94 1360 74 1480 54 1600 74'/%3E%3Cpath d='M0 114 C120 94 220 94 340 114 S560 134 680 114 900 94 1020 114 1240 134 1360 114 1480 94 1600 114'/%3E%3Cpath d='M0 154 C120 134 220 134 340 154 S560 174 680 154 900 134 1020 154 1240 174 1360 154 1480 134 1600 154'/%3E%3Cpath d='M0 194 C120 174 220 174 340 194 S560 214 680 194 900 174 1020 194 1240 214 1360 194 1480 174 1600 194'/%3E%3Cpath d='M0 234 C120 214 220 214 340 234 S560 254 680 234 900 214 1020 234 1240 254 1360 234 1480 214 1600 234'/%3E%3Cpath d='M0 274 C120 254 220 254 340 274 S560 294 680 274 900 254 1020 274 1240 294 1360 274 1480 254 1600 274'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: cover;
+  background-position: center;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.header::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 24px;
+  background: linear-gradient(180deg, rgba(31, 45, 77, 0.02), transparent);
+  pointer-events: none;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 0.55rem;
+  max-width: 40rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.eyebrow {
+  color: var(--primary);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(1.8rem, 3.5vw, 2.9rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: #05070d;
+  font-weight: 600;
+}
+
+.copy {
+  margin: 0 auto;
+  max-width: 40rem;
+  color: var(--text-muted);
+  line-height: 1.68;
+  font-size: 0.96rem;
+}
+
+.art {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.tile {
+  position: absolute;
+  width: 3.8rem;
+  height: 3.8rem;
+  border-radius: 8px;
+  box-shadow: 0 18px 24px rgba(15, 23, 42, 0.12);
+  opacity: 0.98;
+}
+
+.tileGreen {
+  left: 2.2rem;
+  top: 4.7rem;
+  background: #0f8f77;
+  transform: rotate(-7deg);
+}
+
+.tileBlue {
+  left: 14%;
+  top: 1.35rem;
+  background: #2a82bd;
+  transform: rotate(-6deg);
+}
+
+.tileOrange {
+  right: 2.6rem;
+  top: 4.4rem;
+  background: #f2270f;
+  transform: rotate(6deg);
+}
+
+.tilePlum {
+  left: 16%;
+  bottom: -1.3rem;
+  background: #6b56bb;
+  transform: rotate(-24deg);
+}
+
+.headerCompact {
+  padding: 1.15rem 1.3rem;
+  border-radius: 26px;
+}
+
+.headerCompact::before {
+  opacity: 0.5;
+}
+
+.headerCompact .content {
+  max-width: none;
+  margin: 0;
+  text-align: left;
+}
+
+.headerCompact .title {
+  font-size: clamp(1.45rem, 2.3vw, 1.9rem);
+  font-weight: 600;
+}
+
+.headerCompact .copy {
+  margin: 0;
+  max-width: 60ch;
+}
+
+.headerCompact .tile {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 6px;
+  box-shadow: 0 10px 18px rgba(15, 23, 42, 0.1);
+}
+
+.headerCompact .tileGreen {
+  left: auto;
+  right: 9rem;
+  top: 1.65rem;
+}
+
+.headerCompact .tileBlue {
+  left: auto;
+  right: 15rem;
+  top: auto;
+  bottom: 1.2rem;
+}
+
+.headerCompact .tileOrange {
+  right: 2rem;
+  top: 1.8rem;
+}
+
+.headerCompact .tilePlum {
+  left: auto;
+  right: 4.8rem;
+  bottom: -0.65rem;
+}
+
+@media (max-width: 900px) {
+  .header {
+    padding: 1.7rem 1.35rem 1.95rem;
+    border-radius: 0 0 24px 24px;
+  }
+
+  .content {
+    text-align: left;
+    margin: 0;
+    max-width: 34rem;
+  }
+
+  .copy {
+    margin: 0;
+  }
+
+  .tile {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .tileGreen {
+    left: 1rem;
+    top: auto;
+    bottom: 2.1rem;
+  }
+
+  .tileBlue {
+    left: auto;
+    right: 6.6rem;
+    top: 1.2rem;
+  }
+
+  .tileOrange {
+    right: 1rem;
+    top: auto;
+    bottom: 2rem;
+  }
+
+  .tilePlum {
+    left: 7rem;
+    bottom: -1.35rem;
+  }
+
+  .headerCompact {
+    padding: 1rem 1.05rem;
+    border-radius: 22px;
+  }
+
+  .headerCompact .tileBlue,
+  .headerCompact .tilePlum {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .header {
+    padding: 1.45rem 1rem 1.7rem;
+  }
+
+  .tileBlue,
+  .tilePlum {
+    display: none;
+  }
+}
+
+:global(html[data-theme='dark']) .header {
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(24, 36, 58, 0.96)),
+    linear-gradient(90deg, rgba(244, 163, 64, 0.08), transparent 24%);
+  border-color: rgba(203, 219, 227, 0.12);
+}
+
+:global(html[data-theme='dark']) .header::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1600' height='340' viewBox='0 0 1600 340'%3E%3Cg fill='none' stroke='rgba(244,163,64,0.10)' stroke-width='2'%3E%3Cpath d='M0 34 C120 14 220 14 340 34 S560 54 680 34 900 14 1020 34 1240 54 1360 34 1480 14 1600 34'/%3E%3Cpath d='M0 74 C120 54 220 54 340 74 S560 94 680 74 900 54 1020 74 1240 94 1360 74 1480 54 1600 74'/%3E%3Cpath d='M0 114 C120 94 220 94 340 114 S560 134 680 114 900 94 1020 114 1240 134 1360 114 1480 94 1600 114'/%3E%3Cpath d='M0 154 C120 134 220 134 340 154 S560 174 680 154 900 134 1020 154 1240 174 1360 154 1480 134 1600 154'/%3E%3Cpath d='M0 194 C120 174 220 174 340 194 S560 214 680 194 900 174 1020 194 1240 214 1360 194 1480 174 1600 194'/%3E%3Cpath d='M0 234 C120 214 220 214 340 234 S560 254 680 234 900 214 1020 234 1240 254 1360 234 1480 214 1600 234'/%3E%3Cpath d='M0 274 C120 254 220 254 340 274 S560 294 680 274 900 254 1020 274 1240 294 1360 274 1480 254 1600 274'/%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.62;
+}
+
+:global(html[data-theme='dark']) .title {
+  color: #f8fbff;
+}

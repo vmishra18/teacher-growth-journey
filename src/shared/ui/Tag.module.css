@@ -1,0 +1,21 @@
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  width: fit-content;
+  padding: 0.28rem 0.56rem;
+  border-radius: 10px;
+  border: 1px solid rgba(229, 138, 43, 0.18);
+  background: var(--accent-warm-soft);
+  color: var(--accent-warm-strong);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.dot {
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 50%;
+  background: var(--accent-warm);
+}

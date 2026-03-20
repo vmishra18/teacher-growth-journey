@@ -1,0 +1,38 @@
+.ring {
+  --size: 132px;
+  --thickness: 14px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background: conic-gradient(var(--ring-color) calc(var(--value) * 1%), rgba(87, 101, 116, 0.18) 0);
+}
+
+.ring::before {
+  content: "";
+  position: absolute;
+  inset: var(--thickness);
+  border-radius: 50%;
+  background: var(--surface-strong);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.content {
+  position: relative;
+  display: grid;
+  gap: 0.2rem;
+  text-align: center;
+}
+
+.value {
+  font-size: 1.7rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}

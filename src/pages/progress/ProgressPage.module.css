@@ -1,0 +1,431 @@
+.signalBoard {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 0.35rem 0 0.75rem;
+}
+
+.signalBoardHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.signalFocus {
+  padding: 0.6rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.76);
+  border: 1px solid var(--border);
+  font-size: 0.88rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.bannerStats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 12rem));
+  gap: 0.8rem;
+  justify-content: start;
+  align-items: start;
+}
+
+.signalFeature {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.82fr) minmax(0, 1fr);
+  gap: 1.6rem;
+  align-items: start;
+  padding: 0.3rem 0;
+}
+
+.signalFeatureVisual {
+  min-width: 0;
+}
+
+.signalFeatureContent {
+  display: grid;
+  gap: 0.95rem;
+  align-content: start;
+}
+
+.signalFeatureEyebrow {
+  color: var(--primary);
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+
+.signalFeatureTitle {
+  margin: 0;
+  color: var(--text);
+  font-size: clamp(1.45rem, 2.4vw, 2.25rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  font-weight: 600;
+}
+
+.signalFeatureText {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.76;
+}
+
+.signalFeatureMeta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 18rem));
+  gap: 0.8rem;
+  align-items: start;
+}
+
+.signalFeaturePoint {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.95rem 1rem;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.signalFeaturePointLabel {
+  color: var(--text-soft);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 800;
+}
+
+.signalFeaturePointValue {
+  color: var(--text);
+  font-size: 0.98rem;
+  line-height: 1.45;
+  letter-spacing: -0.02em;
+}
+
+.bannerStat {
+  display: grid;
+  gap: 0.3rem;
+  padding: 1rem 1.05rem;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.74);
+  background: rgba(255, 255, 255, 0.76);
+  box-shadow: var(--shadow-card);
+  justify-items: start;
+  text-align: left;
+  align-content: start;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  gap: 1.15rem;
+  align-items: start;
+  margin-bottom: 1.5rem;
+}
+
+.heroCard {
+  display: grid;
+  align-content: start;
+}
+
+.actionCard {
+  display: grid;
+  align-content: start;
+}
+
+.cycleGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 12rem));
+  gap: 0.8rem;
+  align-items: start;
+  justify-content: start;
+}
+
+.summaryCard {
+  display: grid;
+  gap: 0.95rem;
+  align-content: start;
+  height: fit-content;
+  align-self: start;
+  padding: 0.2rem 0 0.35rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+}
+
+.heroHeader,
+.sectionHeader {
+  display: grid;
+  gap: 0.32rem;
+}
+
+.eyebrow {
+  color: var(--primary);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 1.12rem;
+  letter-spacing: -0.035em;
+  font-weight: 600;
+}
+
+.heroMetric {
+  font-size: 1.55rem;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.bodyText {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.78;
+  max-width: 68ch;
+}
+
+.cycleStat {
+  display: grid;
+  gap: 0.28rem;
+  padding: 1rem 1.05rem;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: var(--surface-glass);
+  justify-items: start;
+  text-align: left;
+  align-content: start;
+}
+
+.statLabel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.38rem;
+  color: var(--text-soft);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 800;
+}
+
+.statValue {
+  font-size: 1.5rem;
+  letter-spacing: -0.04em;
+}
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.kpi {
+  padding: 0.95rem 1rem;
+  border-radius: var(--radius-md);
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+}
+
+.kpiLabel {
+  color: var(--text-soft);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.kpiValue {
+  margin-top: 0.4rem;
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.progressList {
+  display: grid;
+  gap: 0.85rem;
+  max-height: min(42rem, calc(100vh - 16rem));
+  overflow-y: auto;
+  padding-right: 0.45rem;
+}
+
+.progressRow {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem 1.1rem;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: var(--surface-elevated);
+}
+
+.progressHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.progressCopy {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.progressTitle {
+  color: var(--text);
+  font-size: 1rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.progressSide {
+  display: grid;
+  justify-items: end;
+  gap: 0.55rem;
+  flex-shrink: 0;
+}
+
+.progressSummary {
+  margin: 0;
+  color: var(--text-soft);
+  line-height: 1.5;
+}
+
+.progressValue {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 4.5rem;
+  padding: 0.38rem 0.72rem;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--primary);
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.progressLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem 0.9rem;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--surface-glass-soft);
+  color: var(--text-muted);
+  font-weight: 600;
+  line-height: 1;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+.progressLink:hover {
+  transform: translateY(-1px);
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
+.progressList::-webkit-scrollbar {
+  width: 10px;
+}
+
+.progressList::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.45);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.progressList::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.currentFocusStrip {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem 1.05rem;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: var(--surface-elevated);
+}
+
+.currentFocusLabel {
+  color: var(--text-soft);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+}
+
+.currentFocusValue {
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+}
+
+.currentFocusMeta {
+  color: var(--text-muted);
+  line-height: 1.72;
+}
+
+@media (max-width: 960px) {
+  .summaryGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .bannerStats,
+  .signalFeature,
+  .signalFeatureMeta,
+  .cycleGrid,
+  .kpis {
+    grid-template-columns: 1fr;
+  }
+
+  .progressHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .progressSide {
+    justify-items: start;
+  }
+
+  .signalBoardHeader {
+    flex-direction: column;
+  }
+}
+
+:global(html[data-theme='dark']) .signalBoard {
+  background: none;
+}
+
+:global(html[data-theme='dark']) .signalFocus,
+:global(html[data-theme='dark']) .bannerStat,
+:global(html[data-theme='dark']) .signalFeaturePoint {
+  background: rgba(15, 23, 42, 0.58);
+  border-color: rgba(203, 219, 227, 0.12);
+}
+
+:global(html[data-theme='dark']) .signalFocus,
+:global(html[data-theme='dark']) .statValue,
+:global(html[data-theme='dark']) .cardTitle,
+:global(html[data-theme='dark']) .signalFeatureTitle,
+:global(html[data-theme='dark']) .signalFeaturePointValue {
+  color: #f8fbff;
+}
+
+:global(html[data-theme='dark']) .statLabel,
+:global(html[data-theme='dark']) .signalFeaturePointLabel {
+  color: #b8c7d8;
+}
+
+:global(html[data-theme='dark']) .signalFeatureText {
+  color: #c9d5e3;
+}

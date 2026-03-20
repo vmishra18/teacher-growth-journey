@@ -1,0 +1,261 @@
+.header {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(280px, 0.9fr);
+  gap: 1.15rem;
+  align-items: start;
+}
+
+.headerCard {
+  display: grid;
+  gap: 0.95rem;
+  align-content: start;
+  height: fit-content;
+  padding: 0.2rem 0;
+}
+
+.headerHero {
+  background: none;
+}
+
+.evidenceCard {
+  align-content: start;
+  background: none;
+}
+
+.titleRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: start;
+}
+
+.metaStack {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.heroKicker {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-soft);
+  font-weight: 800;
+}
+
+.progressValue {
+  color: var(--text);
+  font-size: 0.96rem;
+  font-weight: 800;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(1.75rem, 2.5vw, 2.2rem);
+  font-family: var(--font-display);
+  letter-spacing: -0.03em;
+  font-weight: 600;
+}
+
+.description {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.journeyRail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.journeyStep {
+  padding: 0.62rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  background: var(--surface-glass-soft);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.journeyStepActive {
+  border-color: rgba(37, 99, 235, 0.18);
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--primary);
+}
+
+.metricsRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10.5rem, 12rem));
+  gap: 0.8rem;
+  justify-content: start;
+  align-items: start;
+}
+
+.metricCard {
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.9rem 0.95rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface-glass);
+}
+
+.metricLabel {
+  color: var(--text-soft);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+.metricNumber {
+  font-size: 1.1rem;
+  letter-spacing: -0.03em;
+}
+
+.goal {
+  margin: 0;
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  line-height: 1.7;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.1rem;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 1.14rem;
+  letter-spacing: -0.025em;
+  font-weight: 600;
+}
+
+.sectionIntro {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.sectionKicker {
+  color: var(--primary);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.sectionLead {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.bodyText {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.detailList {
+  display: grid;
+  gap: 0.7rem;
+  padding-top: 0.3rem;
+}
+
+.detailItem {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--border);
+}
+
+.detailLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  color: var(--text-soft);
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+.techniques {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.resourcesPanel {
+  display: grid;
+  gap: 1.1rem;
+  padding: 0.2rem 0;
+}
+
+.resources {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.resourceCard {
+  display: grid;
+  gap: 0.55rem;
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface-elevated);
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.resourceCard:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-soft);
+}
+
+.resourceTitle {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.resourceDescription {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.resourceMeta {
+  display: flex;
+  gap: 0.65rem;
+  font-size: 0.9rem;
+  color: var(--text-soft);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  align-items: flex-start;
+}
+
+@media (max-width: 920px) {
+  .header,
+  .summaryGrid,
+  .resources {
+    grid-template-columns: 1fr;
+  }
+
+  .metricsRow {
+    grid-template-columns: 1fr;
+  }
+}
