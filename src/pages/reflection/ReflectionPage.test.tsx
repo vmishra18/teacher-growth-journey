@@ -29,14 +29,14 @@ describe('ReflectionPage', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText(/Your reflection has been saved\. Keep building your practice\./i),
+        screen.getByText(/Reflection saved\. A new insight has been added to the development thread\./i),
       ).toBeInTheDocument();
     });
 
     expect(
       screen.getByText(/More pupils explained their reasoning before I moved on\./i),
     ).toBeInTheDocument();
-    expect(screen.getByText(/Hold the pause across the whole lesson/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Refine questioning practice/i).length).toBeGreaterThan(0);
     },
     10000,
   );
@@ -48,12 +48,39 @@ describe('ReflectionPage', () => {
       appRoutes.reflection,
     );
 
-    expect(await screen.findByText(/Pupils say they need longer thinking time before answering/i)).toBeInTheDocument();
+    expect(
+      (await screen.findAllByText(/Pupils say they need longer thinking time before answering/i)).length,
+    ).toBeGreaterThan(0);
 
     await userEvent.click(screen.getByRole('button', { name: /Turn into insight/i }));
 
     await waitFor(() => {
       expect(screen.getAllByText(/Increase wait time more consistently/i).length).toBeGreaterThan(0);
     });
+  });
+
+  it('restores a saved draft for the matching reflection context', async () => {
+    window.localStorage.setItem(
+      'teacher-growth-reflection-draft',
+      JSON.stringify({
+        focusAreaId: 'questioning',
+        techniqueId: 'increase-wait-time',
+        confidence: 4,
+        wentWell: 'Pupils stayed with the pause for longer before answering.',
+        improveNext: 'Keep the same pause after every whole-class question.',
+        updatedAt: '2026-03-23T09:00:00.000Z',
+      }),
+    );
+
+    renderWithApp(
+      <ReflectionPage />,
+      `${appRoutes.reflection}?focus=questioning&technique=increase-wait-time`,
+      appRoutes.reflection,
+    );
+
+    expect(await screen.findByDisplayValue(/Pupils stayed with the pause/i)).toBeInTheDocument();
+    expect(screen.getByDisplayValue(/Keep the same pause after every whole-class question/i)).toBeInTheDocument();
+    expect(screen.getByRole('radio', { name: '4' })).toBeChecked();
+    expect(screen.getByText(/Draft restored from 23 Mar\./i)).toBeInTheDocument();
   });
 });

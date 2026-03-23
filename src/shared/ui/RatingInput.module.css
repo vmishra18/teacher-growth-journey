@@ -42,3 +42,9 @@
   border-color: var(--primary);
   color: var(--primary);
 }
+
+.input:focus-visible + .pill {
+  outline: 3px solid rgba(37, 99, 235, 0.25);
+  outline-offset: 3px;
+  border-color: rgba(37, 99, 235, 0.42);
+}

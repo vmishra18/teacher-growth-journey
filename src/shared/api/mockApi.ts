@@ -188,6 +188,22 @@ export const mockApi = {
       return {
         ...current,
         currentFocusAreaId: focusArea.id,
+        focusAreas: current.focusAreas.map((item) =>
+          item.id === focusArea.id
+            ? {
+                ...item,
+                techniques: item.techniques.map((technique) =>
+                  technique.id === input.techniqueId
+                    ? {
+                        ...technique,
+                        tried: true,
+                        lastTriedAt: nextReflection.createdAt,
+                      }
+                    : technique,
+                ),
+              }
+            : item,
+        ),
         reflections: [
           nextReflection,
           ...current.reflections,

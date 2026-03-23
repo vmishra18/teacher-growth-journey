@@ -2,6 +2,8 @@
   position: relative;
   min-height: 360px;
   overflow: visible;
+  animation: sceneEnter 720ms var(--ease-standard);
+  will-change: transform, opacity;
 }
 
 .sceneSvg {
@@ -79,6 +81,18 @@
   }
 }
 
+@keyframes sceneEnter {
+  from {
+    opacity: 0;
+    transform: translate3d(32px, 0, 0) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
 @media (max-width: 700px) {
   .scene {
     min-height: 280px;
@@ -86,6 +100,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .scene,
   .blob,
   .orbit,
   .boardGroup,

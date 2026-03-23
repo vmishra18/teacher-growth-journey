@@ -1,23 +1,34 @@
 # Teacher Growth Journey
 
-A production-quality React + TypeScript prototype for an internal teacher development product. It models a realistic improvement loop for busy teachers: choose a focus area, learn evidence-informed techniques, try one in class, reflect briefly, and track progress over time.
+Teacher Growth Journey is a frontend product prototype for a teacher development workflow. The idea is simple: help a teacher choose one area of practice, try a specific classroom move, reflect on what happened, and keep track of progress over time without turning the experience into a heavy admin tool.
 
-## Why this maps to a real EdTech product
+This project is built as a realistic product UI rather than a marketing page or a generic dashboard. It is designed around a practical teaching loop:
 
-This is intentionally not a dashboard or marketing site. The product slice is designed around daily teacher behaviour:
+1. choose a focus area
+2. review evidence and suggested techniques
+3. try something in class
+4. write a short reflection
+5. turn that reflection into an insight and next goal
 
-- A small overview page that surfaces the current focus, recent reflection, progress this week, and the single most useful next action.
-- Focus area detail pages that translate evidence into plain language and then into practical techniques with classroom examples.
-- A short reflection workflow that respects teacher time while still producing usable progress signals.
-- Progress tracking based on classroom action and reflection, not passive content consumption.
+## What the product includes
 
-## High-impact product features included
+- A focused homepage that surfaces the current priority, progress, saved draft continuity, and next best action.
+- Focus area pages with evidence summaries, recommended techniques, classroom examples, and linked resources.
+- A stronger end-to-end reflection workflow with autosaved local drafts, evidence prompts, previous reflection context, and a clear next-step handoff.
+- Progress and passport screens that show development over time instead of just static cards.
+- Local persistence with `localStorage`, so the app feels like a working product rather than a reset-on-refresh demo.
+- Light and dark mode with persisted theme preference.
 
-- Recommended next step logic based on current focus progress, recent technique use, and reflection history.
-- Progress visualisation through rings and bars at both overview and focus-area level.
-- Bookmarkable techniques so teachers can save ideas before trying them.
-- Light and dark mode with persisted preference.
-- Local persistence via `localStorage` so the prototype behaves more like a real working product.
+## Why I built it this way
+
+A lot of education product demos either become overly decorative or collapse into a plain admin dashboard. I wanted this to sit somewhere more believable: product-led, visually polished, but still grounded in an actual user workflow.
+
+The UI is intentionally built around teacher time and attention:
+
+- short reflection prompts instead of long forms
+- one recommended next move instead of many competing actions
+- realistic progress signals based on trying, reflecting, and refining
+- calmer layouts that avoid overusing nested cards
 
 ## Tech stack
 
@@ -25,179 +36,138 @@ This is intentionally not a dashboard or marketing site. The product slice is de
 - TypeScript
 - Vite
 - React Router
-- Context API for app state
-- CSS Modules for styling
-- React Testing Library + Vitest
+- Context API
+- CSS Modules
+- Vitest
+- React Testing Library
 
-## Folder structure
+## Running the project
 
-```text
-teacher-growth-journey/
-├── .gitignore
-├── index.html
-├── package.json
-├── README.md
-├── tsconfig.app.json
-├── tsconfig.json
-├── tsconfig.node.json
-├── vite.config.ts
-└── src
-    ├── app
-    │   ├── App.tsx
-    │   ├── global.css
-    │   ├── providers
-    │   │   ├── AppProviders.tsx
-    │   │   ├── JourneyProvider.tsx
-    │   │   └── index.ts
-    │   └── router
-    │       ├── AppRouter.tsx
-    │       └── index.ts
-    ├── features
-    │   └── focus-area-techniques
-    │   │   ├── TechniqueCard.module.css
-    │   │   └── TechniqueCard.tsx
-    ├── pages
-    │   ├── focus-areas
-    │   │   ├── FocusAreaDetailPage.module.css
-    │   │   ├── FocusAreaDetailPage.test.tsx
-    │   │   ├── FocusAreaDetailPage.tsx
-    │   │   ├── FocusAreasPage.module.css
-    │   │   ├── FocusAreasPage.test.tsx
-    │   │   └── FocusAreasPage.tsx
-    │   ├── home
-    │   │   ├── HomePage.module.css
-    │   │   └── HomePage.tsx
-    │   ├── passport
-    │   │   ├── PassportPage.module.css
-    │   │   ├── PassportPage.test.tsx
-    │   │   └── PassportPage.tsx
-    │   ├── progress
-    │   │   ├── ProgressPage.module.css
-    │   │   └── ProgressPage.tsx
-    │   └── reflection
-    │       ├── ReflectionPage.module.css
-    │       ├── ReflectionPage.test.tsx
-    │       └── ReflectionPage.tsx
-    ├── shared
-    │   ├── api
-    │   │   └── mockApi.ts
-    │   ├── config
-    │   │   └── routes.ts
-    │   ├── lib
-    │   │   ├── colorTokens.ts
-    │   │   ├── development.ts
-    │   │   ├── passport.ts
-    │   │   ├── progress.ts
-    │   │   └── recommendations.ts
-    │   ├── mocks
-    │   │   └── mockData.ts
-    │   ├── types
-    │   │   └── index.ts
-    │   └── ui
-    │       ├── Button.tsx
-    │       ├── Card.tsx
-    │       ├── Layout.tsx
-    │       └── index.ts
-    ├── test
-    │   ├── renderApp.tsx
-    │   └── setup.ts
-    └── vite-env.d.ts
-```
-
-## Architecture direction
-
-The codebase now follows a more product-team-friendly structure:
-
-- `app/` holds composition and bootstrap concerns such as providers and the router.
-- `pages/` contains route-level screens. These are the entry points a user can navigate to directly.
-- `features/` contains reusable product behaviour that can appear inside multiple pages. Right now `TechniqueCard` is a true feature-level slice.
-- `shared/` contains cross-cutting building blocks: UI primitives, domain utilities, route config, mock API, seed data, and shared types.
-- `test/` keeps common test wiring out of page files.
-
-This is closer to how many companies separate application shell, routed surfaces, reusable product slices, and shared infrastructure. It also makes it easier to grow the app without turning every new screen into a catch-all `components` folder.
-
-## Key implementation choices
-
-### 1. Product logic over static UI
-
-The app uses a small mock service layer with async behaviour and local persistence. Actions such as changing the current focus, bookmarking a technique, logging a technique as tried, and saving reflections all update the underlying state and reflow the UI.
-
-### 2. Progress that reflects practice
-
-Progress is derived from:
-
-- techniques tried
-- number of reflections
-- most recent confidence rating
-
-That gives a more realistic signal than a generic completion bar.
-
-### 3. Calm teacher-friendly interface
-
-The visual system is designed to reduce cognitive load:
-
-- restrained colours and high-contrast text
-- spacious card layouts
-- plain-language evidence summaries
-- one primary action per key area
-- accessible forms and clear focus states
-
-### 4. Scalable frontend structure
-
-The project now uses clearer architectural boundaries:
-
-- shared UI primitives live in `src/shared/ui`
-- route screens live in `src/pages`
-- reusable product slices live in `src/features`
-- app shell concerns live in `src/app`
-- route definitions are centralised in `src/shared/config/routes.ts`
-- imports use the `@/` alias to avoid brittle `../../..` paths
-
-That is a much closer fit for a real frontend codebase where teams need consistent ownership and predictable scaling.
-
-## Accessibility notes
-
-- Semantic page structure with headings, form labels, fieldsets, legends, and progress roles.
-- Keyboard accessible controls and visible focus treatment.
-- Strong contrast in both light and dark themes.
-- Loading, empty, and error states included for key flows.
-
-## Tests included
-
-- Rendering the seeded focus areas on the focus area page.
-- Marking a technique as tried on the focus detail page.
-- Saving a reflection and seeing it appear in history.
-
-## How to run
-
-1. Install dependencies:
+Install dependencies:
 
 ```bash
 npm install
 ```
 
-2. Start the dev server:
+Start the dev server:
 
 ```bash
 npm run dev
 ```
 
-3. Run tests:
+Run tests:
 
 ```bash
 npm test
 ```
 
-4. Build for production:
+Run tests in watch mode:
+
+```bash
+npm run test:watch
+```
+
+Create a production build:
 
 ```bash
 npm run build
 ```
 
-## Notes for interview presentation
+Preview the production build locally:
 
-This prototype is strongest when presented as a deliberate product slice:
+```bash
+npm run preview
+```
 
-- It solves a specific workflow rather than trying to show every possible module.
-- It demonstrates judgement about teacher time, not just visual polish.
-- It keeps the engineering structure ready for scale while staying appropriately lightweight for a prototype.
+## Project structure
+
+```text
+src/
+  app/        app shell, global styles, providers, router
+  features/   reusable product-level features
+  pages/      route-level screens
+  shared/     UI primitives, types, mocks, utilities, config
+  test/       shared test setup and helpers
+```
+
+The main route surfaces are:
+
+- `/` overview/home
+- `/focus-areas`
+- `/focus-areas/:focusAreaId`
+- `/reflection`
+- `/progress`
+- `/passport`
+
+## Architecture notes
+
+This project uses a small mock service layer instead of hardcoded page state. That means actions like saving a reflection, marking a technique as tried, changing the current focus, or promoting an insight into a goal all update the shared journey state and reflow the UI.
+
+State is seeded from mock data and persisted locally, which makes the product much more believable during demos and interviews. Reflection drafts are also stored locally, so a teacher can leave the page and come back to continue where they left off.
+
+## Product decisions
+
+### Reflection is the core workflow
+
+The reflection experience is the strongest end-to-end flow in the project right now. It includes:
+
+- selected focus and technique context
+- evidence-aware prompts
+- confidence rating
+- draft persistence
+- history, insights, and goals in the same workflow
+
+Saving a reflection also feeds the wider journey by creating a new insight and updating the development record.
+
+### Progress is based on practice, not content completion
+
+Progress is derived from signals such as:
+
+- techniques tried
+- reflections logged
+- confidence in recent use
+
+That gives the product a more realistic sense of growth than a generic “percent complete” bar tied only to reading resources.
+
+### The interface is intentionally calmer
+
+I spent time reducing unnecessary card density, improving spacing rhythm, and making page hierarchy more consistent. The goal was to make it feel closer to a real product and less like a UI showcase.
+
+## Accessibility and UX work included
+
+- semantic headings and form structure
+- visible keyboard focus states
+- improved small-screen behavior
+- reduced visual clutter in dense areas
+- persistent state for theme and journey data
+- lighter motion with reduced-motion support
+
+## Testing
+
+There are targeted tests around the key workflows, including:
+
+- homepage rendering
+- focus area detail interactions
+- reflection saving
+- reflection draft restore behavior
+
+## If you are using this in an interview
+
+This project is best presented as a product-thinking frontend case study, not just a visual demo.
+
+Good things to highlight:
+
+- the app is built around a realistic user loop
+- state changes persist locally
+- the reflection flow is designed as a complete interaction, not just a form
+- the codebase is structured to scale beyond a single-page prototype
+- design decisions were made to reduce cognitive load and make the product feel more credible
+
+If I were taking it further, the next steps would be:
+
+- full mobile and tablet pass across every page
+- accessibility audit and refinement
+- richer filtering and search
+- exportable CPD/passport summaries
+- backend integration instead of local mock persistence
+

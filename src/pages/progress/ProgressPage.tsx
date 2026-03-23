@@ -147,14 +147,16 @@ export const ProgressPage = () => {
         </article>
       </section>
 
-      <section className={styles.summaryCard}>
-        <div className={styles.sectionHeader}>
-          <span className={styles.eyebrow}>Current cycle</span>
-          <h3 className={styles.cardTitle}>What is moving forward this week</h3>
+      <section className={`${styles.summaryCard} ${styles.cycleSection}`}>
+        <div className={styles.cycleLead}>
+          <div className={styles.sectionHeader}>
+            <span className={styles.eyebrow}>Current cycle</span>
+            <h3 className={styles.cardTitle}>What is moving forward this week</h3>
+          </div>
+          <p className={styles.bodyText}>
+            Your current focus is <strong>{currentFocus.name}</strong>. Use the progress view to see where practice is building, and use the passport to review the record behind that progress.
+          </p>
         </div>
-        <p className={styles.bodyText}>
-          Your current focus is <strong>{currentFocus.name}</strong>. Use the progress view to see where practice is building, and use the passport to review the record behind that progress.
-        </p>
         <div className={styles.currentFocusStrip}>
           <span className={styles.currentFocusLabel}>Current focus</span>
           <strong className={styles.currentFocusValue}>{currentFocus.name}</strong>

@@ -1,29 +1,107 @@
 .scene {
   position: relative;
-  min-height: 290px;
-  border-radius: 30px;
+  min-height: 212px;
+  border-radius: 24px;
   overflow: hidden;
   background:
     radial-gradient(circle at top left, rgba(255, 255, 255, 0.94), transparent 34%),
     linear-gradient(160deg, rgba(255, 255, 255, 0.82), rgba(232, 239, 255, 0.6));
   border: 1px solid rgba(255, 255, 255, 0.62);
-  box-shadow: 0 24px 52px rgba(37, 99, 235, 0.14);
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.06);
+  animation: sceneEnter 720ms var(--ease-standard);
+  will-change: transform, opacity;
 }
 
 .glow {
   position: absolute;
   inset: auto auto -22% -8%;
-  width: 15rem;
-  height: 15rem;
+  width: 11rem;
+  height: 11rem;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 164, 86, 0.22), transparent 70%);
-  filter: blur(10px);
+  background: radial-gradient(circle, rgba(255, 164, 86, 0.12), transparent 70%);
+  filter: blur(12px);
 }
 
 .sceneSvg {
   display: block;
   width: 100%;
   height: auto;
+}
+
+.imageStage {
+  position: relative;
+  z-index: 1;
+  min-height: 212px;
+  padding: 0.2rem 0.1rem 0;
+  isolation: isolate;
+}
+
+.imageWash {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 18%, rgba(255, 255, 255, 0.96), transparent 28%),
+    radial-gradient(circle at 78% 22%, rgba(226, 236, 255, 0.92), transparent 30%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(232, 239, 255, 0.1));
+  z-index: 0;
+}
+
+.imageGlow {
+  position: absolute;
+  inset: auto auto 3% 6%;
+  width: 8.5rem;
+  height: 8.5rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 164, 86, 0.1), transparent 68%);
+  filter: blur(12px);
+  z-index: 0;
+}
+
+.imageArc {
+  position: absolute;
+  right: 10%;
+  top: 9%;
+  width: 48%;
+  height: 64%;
+  border-radius: 48% 52% 44% 56% / 52% 42% 58% 48%;
+  background: linear-gradient(180deg, #ff7a14 0%, #ff9d40 100%);
+  transform: rotate(18deg);
+  z-index: 0;
+  opacity: 0.86;
+}
+
+.imageRing {
+  position: absolute;
+  right: 2%;
+  top: -2%;
+  width: 70%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  border: 4px solid rgba(31, 45, 77, 0.68);
+  z-index: 0;
+}
+
+.imageFloor {
+  position: absolute;
+  left: 4%;
+  right: 3%;
+  bottom: 2%;
+  height: 22%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 18px 40px rgba(31, 45, 77, 0.08);
+  z-index: 0;
+}
+
+.heroImage {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 212px;
+  object-fit: contain;
+  object-position: center 60%;
 }
 
 .board {
@@ -42,15 +120,7 @@
 }
 
 .floatCard {
-  position: absolute;
-  display: grid;
-  gap: 0.35rem;
-  padding: 0.82rem 0.96rem;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.12);
-  backdrop-filter: blur(10px);
+  display: none;
 }
 
 .floatTop {
@@ -103,7 +173,20 @@
   }
 }
 
+@keyframes sceneEnter {
+  from {
+    opacity: 0;
+    transform: translate3d(30px, 0, 0) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .scene,
   .board,
   .stepCardLeft,
   .stepCardRight,
@@ -118,7 +201,7 @@
     radial-gradient(circle at top left, rgba(96, 165, 250, 0.18), transparent 28%),
     linear-gradient(160deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.9));
   border-color: rgba(203, 219, 227, 0.12);
-  box-shadow: 0 24px 44px rgba(0, 0, 0, 0.26);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
 }
 
 :global(html[data-theme='dark']) .floatCard {
@@ -128,4 +211,25 @@
 
 :global(html[data-theme='dark']) .floatValue {
   color: #f8fbff;
+}
+
+:global(html[data-theme='dark']) .imageWash {
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255, 255, 255, 0.06), transparent 26%),
+    radial-gradient(circle at 78% 22%, rgba(96, 165, 250, 0.12), transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(96, 165, 250, 0.04));
+}
+
+:global(html[data-theme='dark']) .imageArc {
+  background: linear-gradient(180deg, #ff7a14 0%, #ff9d40 100%);
+  opacity: 0.96;
+}
+
+:global(html[data-theme='dark']) .imageRing {
+  border-color: rgba(226, 232, 240, 0.78);
+}
+
+:global(html[data-theme='dark']) .imageFloor {
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.24);
 }

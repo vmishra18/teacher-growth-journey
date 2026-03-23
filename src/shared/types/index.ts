@@ -103,6 +103,15 @@ export interface ReflectionInput {
   improveNext: string;
 }
 
+export interface ReflectionDraft {
+  focusAreaId: string;
+  techniqueId?: string;
+  confidence: number;
+  wentWell: string;
+  improveNext: string;
+  updatedAt: string;
+}
+
 export interface FocusAreaProgress {
   focusAreaId: string;
   progress: number;

@@ -8,9 +8,10 @@
   border: 1px solid rgba(229, 138, 43, 0.18);
   background: var(--accent-warm-soft);
   color: var(--accent-warm-strong);
-  font-size: 0.76rem;
+  font-size: var(--type-label-sm);
   font-weight: 700;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .dot {

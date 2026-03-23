@@ -2,6 +2,8 @@
   position: relative;
   width: min(100%, 25rem);
   margin-inline: auto;
+  animation: sceneEnter 640ms var(--ease-standard);
+  will-change: transform, opacity;
 }
 
 .shadow {
@@ -76,7 +78,20 @@
   }
 }
 
+@keyframes sceneEnter {
+  from {
+    opacity: 0;
+    transform: translate3d(26px, 0, 0) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .scene,
   .book,
   .noteCard,
   .pencil,

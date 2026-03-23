@@ -8,6 +8,9 @@ interface TechniqueCardProps {
   technique: Technique;
   accentColor: string;
   index: number;
+  isRecommended?: boolean;
+  evidenceCue?: string;
+  reflectionCue?: string;
   onTry: () => void;
   onToggleBookmark: () => void;
   isBusy: boolean;
@@ -18,6 +21,9 @@ export const TechniqueCard = ({
   technique,
   accentColor,
   index,
+  isRecommended = false,
+  evidenceCue,
+  reflectionCue,
   onTry,
   onToggleBookmark,
   isBusy,
@@ -40,7 +46,9 @@ export const TechniqueCard = ({
     >
       <div className={styles.top}>
         <div className={styles.headingBlock}>
-          <span className={styles.sequence}>Technique {index + 1}</span>
+          <span className={styles.sequence}>
+            {isRecommended ? 'Best next move' : `Technique ${index + 1}`}
+          </span>
           <h3 className={styles.title}>{technique.title}</h3>
           <p className={styles.summary}>{technique.summary}</p>
         </div>
@@ -60,6 +68,22 @@ export const TechniqueCard = ({
         <div className={styles.example}>
           <span className={styles.exampleLabel}>Classroom example</span>
           <p className={styles.exampleText}>{technique.classroomExample}</p>
+          {evidenceCue || reflectionCue ? (
+            <div className={styles.workflowNotes}>
+              {evidenceCue ? (
+                <div className={styles.workflowNote}>
+                  <span className={styles.workflowLabel}>Evidence to watch</span>
+                  <p className={styles.workflowText}>{evidenceCue}</p>
+                </div>
+              ) : null}
+              {reflectionCue ? (
+                <div className={styles.workflowNote}>
+                  <span className={styles.workflowLabel}>Use in reflection</span>
+                  <p className={styles.workflowText}>{reflectionCue}</p>
+                </div>
+              ) : null}
+            </div>
+          ) : null}
         </div>
       </div>
 

@@ -73,12 +73,12 @@ export const FocusAreasPage = () => {
         <div className={`${styles.overviewCard} ${styles.overviewMini}`}>
           <span className={styles.overviewLabel}>Started strands</span>
           <strong className={styles.overviewValue}>{startedFocusCount}</strong>
-          <span className={styles.overviewHint}>Focus areas where practice is already underway.</span>
+          <span className={styles.overviewHint}>Practice already underway.</span>
         </div>
         <div className={`${styles.overviewCard} ${styles.overviewMini}`}>
           <span className={styles.overviewLabel}>Available resources</span>
           <strong className={styles.overviewValue}>{totalResources}</strong>
-          <span className={styles.overviewHint}>Guides and examples ready to support your next trial.</span>
+          <span className={styles.overviewHint}>Guides ready for the next trial.</span>
         </div>
       </section>
 
@@ -95,6 +95,7 @@ export const FocusAreasPage = () => {
               className={`${styles.cardBody} ${isCurrentFocus ? styles.currentCard : ''}`}
               interactive
               key={focusArea.id}
+              padding="md"
             >
               <div className={styles.cardHeading}>
                 <div className={styles.row}>

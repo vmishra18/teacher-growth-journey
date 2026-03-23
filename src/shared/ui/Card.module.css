@@ -2,15 +2,17 @@
   position: relative;
   background: linear-gradient(180deg, var(--surface-strong), var(--surface));
   border: 1px solid var(--border);
-  border-radius: 24px;
+  border-radius: 22px;
   box-shadow:
     var(--shadow-card),
     inset 0 1px 0 rgba(255, 255, 255, 0.82);
   overflow: hidden;
   transition:
-    box-shadow 220ms ease,
-    border-color 220ms ease,
-    background-color 220ms ease;
+    box-shadow var(--motion-base) var(--ease-standard),
+    border-color var(--motion-base) var(--ease-standard),
+    background-color var(--motion-base) var(--ease-standard),
+    transform var(--motion-base) var(--ease-standard);
+  animation: cardEnter var(--motion-slow) var(--ease-standard);
 }
 
 .card::before {
@@ -24,13 +26,13 @@
 
 .interactive {
   transition:
-    transform 220ms ease,
-    box-shadow 220ms ease,
-    border-color 220ms ease;
+    transform var(--motion-base) var(--ease-standard),
+    box-shadow var(--motion-base) var(--ease-standard),
+    border-color var(--motion-base) var(--ease-standard);
 }
 
 .interactive:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
   box-shadow: var(--shadow-hover);
   border-color: var(--border-strong);
 }
@@ -41,4 +43,16 @@
 
 .paddingLg {
   padding: 1.7rem;
+}
+
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

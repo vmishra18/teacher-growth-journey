@@ -1,9 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useJourney } from '@/app/providers';
 import { appRoutes } from '@/shared/config/routes';
 import { getActiveGoal, getRecentEvidenceSignals } from '@/shared/lib/development';
+import {
+  clearReflectionDraft,
+  formatSavedAt,
+  hasMeaningfulReflectionDraft,
+  readReflectionDraft,
+  writeReflectionDraft,
+} from '@/shared/lib/localPersistence';
 import {
   Button,
   buttonClassName,
@@ -33,15 +40,106 @@ export const ReflectionPage = () => {
   const [confidence, setConfidence] = useState(3);
   const [wentWell, setWentWell] = useState('');
   const [improveNext, setImproveNext] = useState('');
+  const [draftReady, setDraftReady] = useState(false);
+  const [draftMessage, setDraftMessage] = useState('');
   const [savedMessage, setSavedMessage] = useState('');
+  const selectedFocusId = searchParams.get('focus') ?? journey?.currentFocusAreaId ?? '';
+  const selectedTechniqueId = searchParams.get('technique') ?? '';
+  const selectedFocus = journey
+    ? journey.focusAreas.find((focusArea) => focusArea.id === selectedFocusId) ?? journey.focusAreas[0]
+    : null;
+  const matchingTechnique = selectedFocus?.techniques.find(
+    (technique) => technique.id === selectedTechniqueId,
+  );
+  const filteredReflections =
+    journey && selectedFocus
+      ? journey.reflections.filter((reflection) => reflection.focusAreaId === selectedFocus.id)
+      : [];
+  const filteredEvidenceSignals =
+    journey && selectedFocus ? getRecentEvidenceSignals(journey, selectedFocus.id) : [];
+  const filteredInsights =
+    journey && selectedFocus
+      ? journey.insights.filter((insight) => insight.focusAreaId === selectedFocus.id)
+      : [];
+  const activeGoal = journey && selectedFocus ? getActiveGoal(journey, selectedFocus.id) : undefined;
+  const latestEvidence = filteredEvidenceSignals[0];
+  const latestReflection = filteredReflections[0];
+  const latestInsight = filteredInsights[0];
+  const latestReflectionTechnique = latestReflection?.techniqueId
+    ? selectedFocus?.techniques.find((technique) => technique.id === latestReflection.techniqueId)
+    : null;
+  const evidencePrompt = latestEvidence
+    ? `While writing, note whether this lesson changed "${latestEvidence.title.toLowerCase()}".`
+    : `While writing, note which pupils were thinking more deeply and where the routine still felt inconsistent.`;
+  const comparisonPrompt = latestReflection
+    ? `Compare this note with your last reflection${latestReflectionTechnique ? ` on ${latestReflectionTechnique.title}` : ''}. What became more consistent, and what still needs tightening?`
+    : 'Keep the note short. Capture one thing that worked and one thing you will adjust in the next lesson.';
+  const nextMovePrompt = activeGoal
+    ? `Name one next lesson adjustment that keeps the current goal moving: ${activeGoal.title}.`
+    : matchingTechnique
+      ? `Decide how you will repeat ${matchingTechnique.title.toLowerCase()} in the next lesson.`
+      : 'Finish with one small classroom adjustment you will deliberately repeat next time.';
+  const canSubmit = wentWell.trim().length > 0 && improveNext.trim().length > 0;
 
-  if (isLoading || !journey) {
-    return (
-      <Layout>
-        <LoadingState />
-      </Layout>
-    );
-  }
+  useEffect(() => {
+    if (!selectedFocus) {
+      return;
+    }
+
+    const draft = readReflectionDraft();
+
+    if (
+      draft &&
+      draftReady === false &&
+      hasMeaningfulReflectionDraft(draft) &&
+      draft.focusAreaId === selectedFocus.id &&
+      (draft.techniqueId ?? '') === selectedTechniqueId
+    ) {
+      setConfidence(draft.confidence);
+      setWentWell(draft.wentWell);
+      setImproveNext(draft.improveNext);
+      setDraftMessage(`Draft restored from ${formatSavedAt(draft.updatedAt)}.`);
+    }
+
+    setDraftReady(true);
+  }, [draftReady, selectedFocus?.id, selectedTechniqueId]);
+
+  useEffect(() => {
+    if (!draftReady || !selectedFocus) {
+      return;
+    }
+
+    const draft = {
+      focusAreaId: selectedFocus.id,
+      techniqueId: selectedTechniqueId || undefined,
+      confidence,
+      wentWell,
+      improveNext,
+      updatedAt: new Date().toISOString(),
+    };
+    const existingDraft = readReflectionDraft();
+
+    if (!hasMeaningfulReflectionDraft(draft)) {
+      clearReflectionDraft();
+      setDraftMessage('');
+      return;
+    }
+
+    if (
+      existingDraft &&
+      hasMeaningfulReflectionDraft(existingDraft) &&
+      existingDraft.focusAreaId === draft.focusAreaId &&
+      (existingDraft.techniqueId ?? '') === (draft.techniqueId ?? '') &&
+      existingDraft.confidence === draft.confidence &&
+      existingDraft.wentWell === draft.wentWell &&
+      existingDraft.improveNext === draft.improveNext
+    ) {
+      return;
+    }
+
+    writeReflectionDraft(draft);
+    setDraftMessage('Draft saved on this device.');
+  }, [confidence, draftReady, improveNext, selectedFocus, selectedTechniqueId, wentWell]);
 
   if (error) {
     return (
@@ -51,25 +149,24 @@ export const ReflectionPage = () => {
     );
   }
 
-  const selectedFocusId = searchParams.get('focus') ?? journey.currentFocusAreaId;
-  const selectedTechniqueId = searchParams.get('technique') ?? '';
-  const selectedFocus =
-    journey.focusAreas.find((focusArea) => focusArea.id === selectedFocusId) ?? journey.focusAreas[0];
-  const matchingTechnique = selectedFocus.techniques.find(
-    (technique) => technique.id === selectedTechniqueId,
-  );
-  const filteredReflections = journey.reflections.filter(
-    (reflection) => reflection.focusAreaId === selectedFocus.id,
-  );
-  const filteredEvidenceSignals = getRecentEvidenceSignals(journey, selectedFocus.id);
-  const filteredInsights = journey.insights.filter((insight) => insight.focusAreaId === selectedFocus.id);
-  const activeGoal = getActiveGoal(journey, selectedFocus.id);
-  const latestEvidence = filteredEvidenceSignals[0];
+  if (isLoading || !journey || !selectedFocus) {
+    return (
+      <Layout>
+        <LoadingState />
+      </Layout>
+    );
+  }
 
   const handleFocusChange = (focusId: string) => {
     const nextParams = new URLSearchParams(searchParams);
     nextParams.set('focus', focusId);
     nextParams.delete('technique');
+    setConfidence(3);
+    setWentWell('');
+    setImproveNext('');
+    setDraftMessage('');
+    setDraftReady(false);
+    setSavedMessage('');
     setSearchParams(nextParams);
   };
 
@@ -82,6 +179,12 @@ export const ReflectionPage = () => {
       nextParams.delete('technique');
     }
 
+    setConfidence(3);
+    setWentWell('');
+    setImproveNext('');
+    setDraftMessage('');
+    setDraftReady(false);
+    setSavedMessage('');
     setSearchParams(nextParams);
   };
 
@@ -100,7 +203,9 @@ export const ReflectionPage = () => {
     setWentWell('');
     setImproveNext('');
     setConfidence(3);
-    setSavedMessage('Your reflection has been saved. Keep building your practice.');
+    clearReflectionDraft();
+    setDraftMessage('');
+    setSavedMessage('Reflection saved. A new insight has been added to the development thread.');
   };
 
   return (
@@ -143,103 +248,192 @@ export const ReflectionPage = () => {
                   <ReflectionSupportScene />
                 </div>
               </div>
-            </div>
 
-            <div className={styles.formIntro}>
-              <div>
-                <span className={styles.eyebrow}>Current reflection</span>
-                <h2 className={styles.panelTitle}>{selectedFocus.name}</h2>
-              </div>
-              <div className={styles.contextMeta}>
-                <span className={styles.contextLabel}>
-                  {matchingTechnique ? matchingTechnique.title : 'General focus reflection'}
-                </span>
-                <span className={styles.contextHint}>
-                  Short notes are enough to keep momentum and support deliberate practice.
-                </span>
+              <div className={styles.statusRow}>
+                {draftMessage ? (
+                  <p className={styles.draftStatus} aria-live="polite" role="status">
+                    {draftMessage}
+                  </p>
+                ) : null}
+                {savedMessage ? (
+                  <p className={styles.success} aria-live="polite" role="status">
+                    {savedMessage}
+                  </p>
+                ) : null}
               </div>
             </div>
 
-            <div className={styles.field}>
-              <label className={styles.label} htmlFor="focus-area-select">
-                Focus area
-              </label>
-              <select
-                className={styles.select}
-                id="focus-area-select"
-                onChange={(event) => handleFocusChange(event.target.value)}
-                value={selectedFocus.id}
-              >
-                {journey.focusAreas.map((focusArea) => (
-                  <option key={focusArea.id} value={focusArea.id}>
-                    {focusArea.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <section className={styles.beforeWritePanel} aria-label="Before you write">
+              <div className={styles.beforeWriteIntro}>
+                <span className={styles.eyebrow}>Before you write</span>
+                <p className={styles.panelCopy}>
+                  Keep one evidence cue, one comparison point, and one current goal in view.
+                </p>
+              </div>
+              <div className={styles.beforeWriteGrid}>
+                <div className={styles.beforeWriteItem}>
+                  <span className={styles.contextLabel}>Evidence cue</span>
+                  <p className={styles.contextHint}>
+                    {latestEvidence ? latestEvidence.title : 'Use what you noticed from the lesson itself.'}
+                  </p>
+                </div>
+                <div className={styles.beforeWriteItem}>
+                  <span className={styles.contextLabel}>Comparison point</span>
+                  <p className={styles.contextHint}>
+                    {latestReflection ? comparisonPrompt : 'This is the first note in this cycle, so keep it short and specific.'}
+                  </p>
+                </div>
+                <div className={styles.beforeWriteItem}>
+                  <span className={styles.contextLabel}>Current goal</span>
+                  <p className={styles.contextHint}>
+                    {activeGoal ? activeGoal.title : 'Finish with one classroom adjustment worth repeating next lesson.'}
+                  </p>
+                </div>
+              </div>
+            </section>
 
-            <div className={styles.field}>
-              <label className={styles.label} htmlFor="technique-select">
-                Technique used
-              </label>
-              <select
-                className={styles.select}
-                id="technique-select"
-                onChange={(event) => handleTechniqueChange(event.target.value)}
-                value={selectedTechniqueId}
-              >
-                <option value="">General focus reflection</option>
-                {selectedFocus.techniques.map((technique) => (
-                  <option key={technique.id} value={technique.id}>
-                    {technique.title}
-                  </option>
-                ))}
-              </select>
-              <span className={styles.hint}>
-                {matchingTechnique
-                  ? `Reflecting on: ${matchingTechnique.title}`
-                  : 'Choose a specific technique if this reflection relates to one classroom move.'}
+            <section className={styles.formSection} aria-labelledby="reflection-step-context">
+              <div className={styles.formSectionHeader}>
+                <span className={styles.stepBadge}>Step 1</span>
+                <div>
+                  <h2 className={styles.panelTitle} id="reflection-step-context">
+                    Set the lesson context
+                  </h2>
+                  <p className={styles.panelCopy}>
+                    Tie the note to one focus area and one classroom move.
+                  </p>
+                </div>
+              </div>
+
+              <div className={styles.fieldGrid}>
+                <div className={styles.field}>
+                  <label className={styles.label} htmlFor="focus-area-select">
+                    Focus area
+                  </label>
+                  <select
+                    aria-describedby="focus-area-hint"
+                    className={styles.select}
+                    id="focus-area-select"
+                    onChange={(event) => handleFocusChange(event.target.value)}
+                    value={selectedFocus.id}
+                  >
+                    {journey.focusAreas.map((focusArea) => (
+                      <option key={focusArea.id} value={focusArea.id}>
+                        {focusArea.name}
+                      </option>
+                    ))}
+                  </select>
+                  <span className={styles.hint} id="focus-area-hint">
+                    Choose the teaching focus you are improving.
+                  </span>
+                </div>
+
+                <div className={styles.field}>
+                  <label className={styles.label} htmlFor="technique-select">
+                    Technique used
+                  </label>
+                  <select
+                    aria-describedby="technique-hint"
+                    className={styles.select}
+                    id="technique-select"
+                    onChange={(event) => handleTechniqueChange(event.target.value)}
+                    value={selectedTechniqueId}
+                  >
+                    <option value="">General focus reflection</option>
+                    {selectedFocus.techniques.map((technique) => (
+                      <option key={technique.id} value={technique.id}>
+                        {technique.title}
+                      </option>
+                    ))}
+                  </select>
+                  <span className={styles.hint} id="technique-hint">
+                    {matchingTechnique
+                      ? `Reflecting on: ${matchingTechnique.title}`
+                      : 'Choose a technique only if this reflection relates to one specific move.'}
+                  </span>
+                </div>
+              </div>
+
+              <RatingInput
+                label="How confident do you feel using this technique?"
+                onChange={setConfidence}
+                value={confidence}
+              />
+            </section>
+
+            <section className={styles.formSection} aria-labelledby="reflection-step-write">
+              <div className={styles.formSectionHeader}>
+                <span className={styles.stepBadge}>Step 2</span>
+                <div>
+                  <h2 className={styles.panelTitle} id="reflection-step-write">
+                    Capture what happened in the lesson
+                  </h2>
+                  <p className={styles.panelCopy}>{evidencePrompt}</p>
+                </div>
+              </div>
+
+              <TextArea
+                aria-describedby="went-well-hint"
+                id="went-well"
+                label="What went well?"
+                onChange={(event) => setWentWell(event.target.value)}
+                placeholder="Describe what worked effectively in your lesson"
+                required
+                value={wentWell}
+              />
+              <span className={styles.fieldHint} id="went-well-hint">
+                Name the strongest pupil response or moment of consistency you noticed.
               </span>
-            </div>
 
-            <RatingInput
-              label="How confident do you feel using this technique?"
-              onChange={setConfidence}
-              value={confidence}
-            />
+              <TextArea
+                aria-describedby="improve-next-hint"
+                id="improve-next"
+                label="What could be improved?"
+                onChange={(event) => setImproveNext(event.target.value)}
+                placeholder="Identify areas to refine next time"
+                required
+                value={improveNext}
+              />
+              <span className={styles.fieldHint} id="improve-next-hint">
+                Name the one adjustment you want to carry into the next lesson.
+              </span>
+            </section>
 
-            <TextArea
-              id="went-well"
-              label="What went well?"
-              onChange={(event) => setWentWell(event.target.value)}
-              placeholder="Describe what worked effectively in your lesson"
-              required
-              value={wentWell}
-            />
+            <section className={styles.formSection} aria-labelledby="reflection-step-next">
+              <div className={styles.formSectionHeader}>
+                <span className={styles.stepBadge}>Step 3</span>
+                <div>
+                  <h2 className={styles.panelTitle} id="reflection-step-next">
+                    Leave with one next move
+                  </h2>
+                  <p className={styles.panelCopy}>
+                    Saving this reflection will add a new insight to your development thread.
+                  </p>
+                </div>
+              </div>
 
-            <TextArea
-              id="improve-next"
-              label="What could be improved?"
-              onChange={(event) => setImproveNext(event.target.value)}
-              placeholder="Identify areas to refine next time"
-              required
-              value={improveNext}
-            />
+              <div className={styles.handoffPanel}>
+                <div className={styles.handoffBlock}>
+                  <span className={styles.contextLabel}>Best next move to name</span>
+                  <p className={styles.contextHint}>{nextMovePrompt}</p>
+                </div>
+                <div className={styles.handoffBlock}>
+                  <span className={styles.contextLabel}>What will happen when you save</span>
+                  <p className={styles.contextHint}>
+                    The note will be added to your reflection history and turned into a new insight ready for the next goal.
+                  </p>
+                </div>
+              </div>
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.8rem' }}>
-              <Button disabled={activeAction === 'saveReflection'} type="submit">
-                Save reflection
-              </Button>
-              <Link className={buttonClassName('secondary')} to={appRoutes.focusAreaById(selectedFocus.id)}>
-                Back to guidance
-              </Link>
-            </div>
-
-            {savedMessage ? (
-              <p className={styles.success} aria-live="polite">
-                {savedMessage}
-              </p>
-            ) : null}
+              <div className={styles.actions}>
+                <Button disabled={activeAction === 'saveReflection' || !canSubmit} type="submit">
+                  {activeAction === 'saveReflection' ? 'Saving reflection...' : 'Save reflection'}
+                </Button>
+                <Link className={buttonClassName('secondary')} to={appRoutes.focusAreaById(selectedFocus.id)}>
+                  Back to guidance
+                </Link>
+              </div>
+            </section>
           </form>
         </section>
 
@@ -256,104 +450,75 @@ export const ReflectionPage = () => {
             </div>
 
             <div className={styles.flowCard}>
-              <span className={styles.eyebrow}>Evidence input</span>
-              {filteredEvidenceSignals.length === 0 ? (
+              <span className={styles.eyebrow}>Latest evidence</span>
+              {latestEvidence ? (
+                <article className={styles.evidenceCard}>
+                  <div className={styles.evidenceTop}>
+                    <div>
+                      <h3 className={styles.insightTitle}>{latestEvidence.title}</h3>
+                      <p className={styles.insightText}>{latestEvidence.summary}</p>
+                    </div>
+                    <span
+                      className={`${styles.statusBadge} ${
+                        latestEvidence.status === 'used' ? styles.statusSuccess : styles.statusPrimary
+                      }`}
+                    >
+                      {latestEvidence.sourceType === 'student-survey' ? 'Student survey' : 'Observation note'}
+                    </span>
+                  </div>
+                  {latestEvidence.status === 'new' ? (
+                    <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                      <Button
+                        disabled={activeAction === 'createInsightFromEvidence'}
+                        onClick={() => void createInsightFromEvidence(latestEvidence.id)}
+                        variant="secondary"
+                      >
+                        Turn into insight
+                      </Button>
+                    </div>
+                  ) : null}
+                </article>
+              ) : (
                 <p className={styles.panelCopy}>
                   No survey or observation notes are currently linked to this focus area.
                 </p>
-              ) : (
-                <div className={styles.evidenceList}>
-                  {filteredEvidenceSignals.map((signal) => (
-                    <article className={styles.evidenceCard} key={signal.id}>
-                      <div className={styles.evidenceTop}>
-                        <div>
-                          <h3 className={styles.insightTitle}>{signal.title}</h3>
-                          <p className={styles.insightText}>{signal.summary}</p>
-                        </div>
-                        <span
-                          className={`${styles.statusBadge} ${
-                            signal.status === 'used' ? styles.statusSuccess : styles.statusPrimary
-                          }`}
-                        >
-                          {signal.sourceType === 'student-survey' ? 'Student survey' : 'Observation note'}
-                        </span>
-                      </div>
-                      {signal.status === 'new' ? (
-                        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                          <Button
-                            disabled={activeAction === 'createInsightFromEvidence'}
-                            onClick={() => void createInsightFromEvidence(signal.id)}
-                            variant="secondary"
-                          >
-                            Turn into insight
-                          </Button>
-                        </div>
-                      ) : null}
-                    </article>
-                  ))}
-                </div>
               )}
             </div>
 
-            <div className={styles.flowCard}>
-              <span className={styles.eyebrow}>Development cycle</span>
-              <div className={styles.flowSteps}>
-                <span className={styles.flowStepActive}>Reflection</span>
-                <span className={styles.flowStep}>Insight</span>
-                <span className={styles.flowStep}>Goal</span>
-              </div>
-            </div>
-
-            <div className={styles.insightList}>
-              {activeGoal ? (
-                <article className={styles.insightCard}>
-                  <div className={styles.insightTop}>
-                    <div>
-                      <h3 className={styles.insightTitle}>Current goal</h3>
-                      <p className={styles.insightText}>{activeGoal.title}</p>
-                    </div>
-                    <span className={`${styles.statusBadge} ${styles.statusSuccess}`}>Active goal</span>
+            {activeGoal ? (
+              <article className={styles.insightCard}>
+                <div className={styles.insightTop}>
+                  <div>
+                    <h3 className={styles.insightTitle}>Current goal</h3>
+                    <p className={styles.insightText}>{activeGoal.title}</p>
                   </div>
-                  <p className={styles.insightText}>{activeGoal.description}</p>
-                </article>
-              ) : null}
+                  <span className={`${styles.statusBadge} ${styles.statusSuccess}`}>Active goal</span>
+                </div>
+                <p className={styles.insightText}>{activeGoal.description}</p>
+              </article>
+            ) : null}
 
-              {filteredInsights.length === 0 ? (
-                <EmptyState
-                  title="No insights yet"
-                  copy="Saving a reflection will create a practical insight you can use to set a clear next goal."
-                />
-              ) : (
-                filteredInsights.map((insight) => (
-                  <article className={styles.insightCard} key={insight.id}>
-                    <div className={styles.insightTop}>
-                      <div>
-                        <h3 className={styles.insightTitle}>{insight.title}</h3>
-                        <p className={styles.insightText}>{insight.description}</p>
-                      </div>
-                      <span
-                        className={`${styles.statusBadge} ${
-                          insight.status === 'goal' ? styles.statusSuccess : styles.statusPrimary
-                        }`}
-                      >
-                        {insight.status === 'goal' ? 'Current goal' : 'New insight'}
-                      </span>
-                    </div>
-                    {insight.status === 'new' ? (
-                      <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                        <Button
-                          disabled={activeAction === 'promoteInsightToGoal'}
-                          onClick={() => void promoteInsightToGoal(insight.id)}
-                          variant="secondary"
-                        >
-                          Turn into current goal
-                        </Button>
-                      </div>
-                    ) : null}
-                  </article>
-                ))
-              )}
-            </div>
+            {latestInsight && latestInsight.status === 'new' ? (
+              <article className={styles.insightCard}>
+                <div className={styles.insightTop}>
+                  <div>
+                    <h3 className={styles.insightTitle}>Latest insight</h3>
+                    <p className={styles.insightText}>{latestInsight.title}</p>
+                  </div>
+                  <span className={`${styles.statusBadge} ${styles.statusPrimary}`}>New insight</span>
+                </div>
+                <p className={styles.insightText}>{latestInsight.description}</p>
+                <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                  <Button
+                    disabled={activeAction === 'promoteInsightToGoal'}
+                    onClick={() => void promoteInsightToGoal(latestInsight.id)}
+                    variant="secondary"
+                  >
+                    Turn into current goal
+                  </Button>
+                </div>
+              </article>
+            ) : null}
 
             {filteredReflections.length === 0 ? (
               <EmptyState
