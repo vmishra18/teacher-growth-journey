@@ -1,10 +1,34 @@
+import { useState } from 'react';
 import styles from './GoalRoadmapScene.module.css';
 
-export const GoalRoadmapScene = () => (
-  <div aria-hidden="true" className={styles.scene}>
-    <div className={styles.glow} />
+interface GoalRoadmapSceneProps {
+  className?: string;
+}
 
-    <svg className={styles.sceneSvg} viewBox="0 0 520 360">
+export const GoalRoadmapScene = ({ className = '' }: GoalRoadmapSceneProps) => {
+  const [showHeroImage, setShowHeroImage] = useState(true);
+
+  return (
+    <div aria-hidden="true" className={[styles.scene, className].filter(Boolean).join(' ')}>
+      <div className={styles.glow} />
+
+      {showHeroImage ? (
+        <div className={styles.imageStage}>
+          <div className={styles.imageWash} />
+          <div className={styles.imageGlow} />
+          <div className={styles.imageArc} />
+          <div className={styles.imageRing} />
+          <div className={styles.imageFloor} />
+          <img
+            alt=""
+            className={styles.heroImage}
+            onError={() => setShowHeroImage(false)}
+            src="/hero.png"
+          />
+        </div>
+      ) : (
+        <>
+          <svg className={styles.sceneSvg} viewBox="0 0 520 360">
       <defs>
         <linearGradient id="goal-roadmap-shell" x1="0%" x2="100%" y1="0%" y2="100%">
           <stop offset="0%" stopColor="#ffffff" />
@@ -95,16 +119,19 @@ export const GoalRoadmapScene = () => (
         <rect fill="rgba(29,39,64,0.12)" height="10" rx="5" width="82" x="362" y="116" />
         <rect fill="rgba(29,39,64,0.08)" height="10" rx="5" width="68" x="362" y="134" />
       </g>
-    </svg>
+          </svg>
 
-    <div className={`${styles.floatCard} ${styles.floatTop}`}>
-      <span className={styles.floatLabel}>Latest insight</span>
-      <strong className={styles.floatValue}>Feedback reviewed</strong>
-    </div>
+          <div className={`${styles.floatCard} ${styles.floatTop}`}>
+            <span className={styles.floatLabel}>Latest insight</span>
+            <strong className={styles.floatValue}>Feedback reviewed</strong>
+          </div>
 
-    <div className={`${styles.floatCard} ${styles.floatBottom}`}>
-      <span className={styles.floatLabel}>Next lesson goal</span>
-      <strong className={styles.floatValue}>Clear classroom move</strong>
+          <div className={`${styles.floatCard} ${styles.floatBottom}`}>
+            <span className={styles.floatLabel}>Next lesson goal</span>
+            <strong className={styles.floatValue}>Clear classroom move</strong>
+          </div>
+        </>
+      )}
     </div>
-  </div>
-);
+  );
+};

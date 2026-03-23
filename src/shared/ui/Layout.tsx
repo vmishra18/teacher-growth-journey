@@ -29,38 +29,23 @@ export const Layout = ({ children }: LayoutProps) => {
                 </span>
               </div>
               <div className={styles.brandBlock}>
-                <span className={styles.brandKicker}>Teacher Growth Journey</span>
-                <span className={styles.brand}>
-                  Evidence-informed professional development for everyday teaching practice
-                </span>
-                <span className={styles.cycleLine}>
-                  <span aria-hidden="true" className={styles.cycleDot} />
-                  Development cycle: use feedback, resources, deliberate practice, and reflection to refine teaching
-                </span>
+                <span className={styles.brandTitle}>Teacher Growth Journey</span>
               </div>
             </div>
-            <div className={styles.meta}>
-              <div className={styles.metaBlock}>
-                <span className={styles.smallLabel}>Teacher view</span>
-                <strong className={styles.metaValue}>Aligned to the Model for Great Teaching</strong>
-              </div>
-              <button
-                aria-label={`Switch to ${nextTheme} mode`}
-                className={styles.themeButton}
-                onClick={toggleTheme}
-                title={`Switch to ${nextTheme} mode`}
-                type="button"
-              >
-                <span className={styles.themeIcon} aria-hidden="true">
-                  {theme === 'light' ? '☾' : '☀'}
-                </span>
-              </button>
+            <div className={styles.navigationSlot}>
+              <Sidebar />
             </div>
-          </div>
-        </div>
-        <div className={styles.navigationWrap}>
-          <div className={styles.navigationInner}>
-            <Sidebar />
+            <button
+              aria-label={`Switch to ${nextTheme} mode`}
+              className={styles.themeButton}
+              onClick={toggleTheme}
+              title={`Switch to ${nextTheme} mode`}
+              type="button"
+            >
+              <span className={styles.themeIcon} aria-hidden="true">
+                {theme === 'light' ? '☾' : '☀'}
+              </span>
+            </button>
           </div>
         </div>
         <main className={styles.main}>

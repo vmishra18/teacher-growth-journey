@@ -3,7 +3,9 @@ import { useJourney } from '@/app/providers';
 import { TechniqueCard } from '@/features/focus-area-techniques';
 import { appRoutes } from '@/shared/config/routes';
 import { focusAreaAccent } from '@/shared/lib/colorTokens';
+import { getActiveGoal, getRecentEvidenceSignals } from '@/shared/lib/development';
 import { getFocusAreaProgress } from '@/shared/lib/progress';
+import { getSuggestedTechnique } from '@/shared/lib/recommendations';
 import {
   buttonClassName,
   EmptyState,
@@ -70,6 +72,9 @@ export const FocusAreaDetailPage = () => {
     (reflection) => reflection.focusAreaId === focusArea.id,
   ).length;
   const triedCount = focusArea.techniques.filter((technique) => technique.tried).length;
+  const activeGoal = getActiveGoal(journey, focusArea.id);
+  const latestEvidence = getRecentEvidenceSignals(journey, focusArea.id)[0];
+  const suggestedTechnique = getSuggestedTechnique(focusArea);
   const latestReflection = [...journey.reflections]
     .filter((reflection) => reflection.focusAreaId === focusArea.id)
     .sort((left, right) => Date.parse(right.createdAt) - Date.parse(left.createdAt))[0];
@@ -79,6 +84,31 @@ export const FocusAreaDetailPage = () => {
         month: 'short',
       })
     : null;
+  const latestEvidenceDate = latestEvidence
+    ? new Date(latestEvidence.createdAt).toLocaleDateString('en-GB', {
+        day: 'numeric',
+        month: 'short',
+      })
+    : null;
+  const reflectionPath = suggestedTechnique
+    ? `${appRoutes.reflection}?focus=${focusArea.id}&technique=${suggestedTechnique.id}`
+    : `${appRoutes.reflection}?focus=${focusArea.id}`;
+  const reflectionHandoff = latestEvidence
+    ? `When you next reflect, note whether this move changes ${latestEvidence.title.toLowerCase()}.`
+    : latestReflection
+      ? `When you next reflect, compare it with your last note from ${latestReflectionDate}.`
+      : 'When you next reflect, capture what pupils did, what you repeated, and what you want to tighten next.';
+  const orderedTechniques = [...focusArea.techniques].sort((left, right) => {
+    const score = (techniqueId: string, tried: boolean, bookmarked: boolean, lastTriedAt?: string) => {
+      if (suggestedTechnique?.id === techniqueId) return 40;
+      if (bookmarked && !tried) return 30;
+      if (!tried) return 20;
+      return lastTriedAt ? 10 + Date.parse(lastTriedAt) / 1_000_000_000_000 : 10;
+    };
+
+    return score(right.id, right.tried, right.bookmarked, right.lastTriedAt) -
+      score(left.id, left.tried, left.bookmarked, left.lastTriedAt);
+  });
 
   return (
     <Layout>
@@ -119,6 +149,7 @@ export const FocusAreaDetailPage = () => {
               <strong className={styles.metricNumber}>{latestReflectionDate ?? 'Not yet'}</strong>
             </div>
           </div>
+          {activeGoal ? <p className={styles.goal}>{activeGoal.description}</p> : null}
           <div className={styles.actions}>
             <button
               className={buttonClassName('primary')}
@@ -136,24 +167,63 @@ export const FocusAreaDetailPage = () => {
 
         <div className={`${styles.headerCard} ${styles.evidenceCard}`}>
           <div className={styles.sectionIntro}>
-            <span className={styles.sectionKicker}>Aligned to the Model for Great Teaching</span>
-            <h3 className={styles.sectionTitle}>Evidence snapshot</h3>
+            <span className={styles.sectionKicker}>Evidence and next move</span>
+            <h3 className={styles.sectionTitle}>What to respond to next</h3>
           </div>
-          <p className={styles.bodyText}>{focusArea.whyItMatters}</p>
-          <p className={styles.bodyText}>{focusArea.evidenceSummary}</p>
-          <div className={styles.detailList}>
-            <div className={styles.detailItem}>
-              <span className={styles.detailLabel}>Element focus</span>
-              <strong>{focusArea.name}</strong>
+          <div className={styles.evidenceSummary}>
+            <div className={styles.evidenceMeta}>
+              <Tag
+                color={accentColor}
+                label={
+                  latestEvidence
+                    ? latestEvidence.sourceType === 'student-survey'
+                      ? 'Student survey'
+                      : 'Observation note'
+                    : 'Research summary'
+                }
+              />
+              <span className={styles.evidenceDate}>{latestEvidenceDate ?? 'Current cycle'}</span>
             </div>
-            <div className={styles.detailItem}>
-              <span className={styles.detailLabel}>Strategies available</span>
-              <strong>{focusArea.techniques.length}</strong>
+            <strong className={styles.workflowTitle}>
+              {latestEvidence ? latestEvidence.title : 'Keep this evidence idea visible'}
+            </strong>
+            <p className={styles.bodyText}>
+              {latestEvidence ? latestEvidence.summary : focusArea.evidenceSummary}
+            </p>
+          </div>
+          <div className={styles.workflowGrid}>
+            <div className={styles.workflowBlock}>
+              <span className={styles.detailLabel}>Best next classroom move</span>
+              <strong className={styles.workflowTitle}>
+                {suggestedTechnique ? suggestedTechnique.title : 'Review the current strategy'}
+              </strong>
+              <p className={styles.bodyText}>
+                {suggestedTechnique ? suggestedTechnique.summary : focusArea.currentGoal}
+              </p>
             </div>
-            <div className={styles.detailItem}>
-              <span className={styles.detailLabel}>Related resources</span>
-              <strong>{focusArea.resources.length}</strong>
+            <div className={styles.workflowBlock}>
+              <span className={styles.detailLabel}>Reflection handoff</span>
+              <p className={styles.bodyText}>{reflectionHandoff}</p>
             </div>
+            <div className={styles.workflowBlock}>
+              <span className={styles.detailLabel}>Keep in view</span>
+              <strong className={styles.workflowTitle}>
+                {activeGoal ? activeGoal.title : focusArea.currentGoal}
+              </strong>
+              <p className={styles.bodyText}>
+                {latestReflectionDate
+                  ? `Last reflection saved ${latestReflectionDate}. Use that note to judge whether the next move is becoming more consistent.`
+                  : 'You do not need a long write-up. One short note after the lesson is enough to keep this cycle moving.'}
+              </p>
+            </div>
+          </div>
+          <div className={styles.actions}>
+            <Link className={buttonClassName('secondary')} to={reflectionPath}>
+              Reflect on best next move
+            </Link>
+            <Link className={buttonClassName('ghost')} to={appRoutes.focusAreas}>
+              Back to all focus areas
+            </Link>
           </div>
         </div>
       </section>
@@ -165,15 +235,18 @@ export const FocusAreaDetailPage = () => {
           copy="Practical classroom strategies to trial, notice, and refine as part of a development cycle."
         />
 
-        {focusArea.techniques.map((technique, index) => (
+        {orderedTechniques.map((technique, index) => (
           <TechniqueCard
             accentColor={accentColor}
+            evidenceCue={latestEvidence?.title}
             focusAreaId={focusArea.id}
             isBusy={activeAction === 'markTechniqueTried' || activeAction === 'toggleBookmark'}
             index={index}
+            isRecommended={suggestedTechnique?.id === technique.id}
             key={technique.id}
             onToggleBookmark={() => void toggleBookmark(focusArea.id, technique.id)}
             onTry={() => void markTechniqueTried(focusArea.id, technique.id)}
+            reflectionCue={reflectionHandoff}
             technique={technique}
           />
         ))}

@@ -1,28 +1,38 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useJourney } from '@/app/providers';
 import { appRoutes } from '@/shared/config/routes';
 import { getActiveGoal, getLatestInsight, getRecentEvidenceSignals } from '@/shared/lib/development';
-import { getRecentReflection } from '@/shared/lib/progress';
+import {
+  buildReflectionDraftPath,
+  formatSavedAt,
+  hasMeaningfulReflectionDraft,
+  readReflectionDraft,
+} from '@/shared/lib/localPersistence';
+import { getFocusAreaProgress, getRecentReflection } from '@/shared/lib/progress';
 import { getSuggestedTechnique, getRecommendedNextStep } from '@/shared/lib/recommendations';
+import type { ReflectionDraft } from '@/shared/types';
 import {
   buttonClassName,
   Card,
   EmptyState,
   ErrorState,
   GoalRoadmapScene,
-  GuidanceFlowScene,
   Layout,
   LoadingState,
   ProgressBar,
-  ResearchLearningScene,
   SectionHeader,
 } from '@/shared/ui';
 import styles from './HomePage.module.css';
 
 export const HomePage = () => {
   const { journey, isLoading, error, refreshJourney } = useJourney();
-  const [showcaseIndex, setShowcaseIndex] = useState(0);
+  const [savedDraft, setSavedDraft] = useState<ReflectionDraft | null>(null);
+
+  useEffect(() => {
+    const nextDraft = readReflectionDraft();
+    setSavedDraft(hasMeaningfulReflectionDraft(nextDraft) ? nextDraft : null);
+  }, [journey]);
 
   if (isLoading || !journey) {
     return (
@@ -43,17 +53,22 @@ export const HomePage = () => {
   const currentFocus =
     journey.focusAreas.find((focusArea) => focusArea.id === journey.currentFocusAreaId) ??
     journey.focusAreas[0];
+  const currentFocusProgress = getFocusAreaProgress(currentFocus, journey.reflections);
   const recentReflection = getRecentReflection(journey);
   const nextStep = getRecommendedNextStep(journey);
   const suggestedTechnique = getSuggestedTechnique(currentFocus);
   const activeGoal = getActiveGoal(journey, currentFocus.id);
   const latestInsight = getLatestInsight(journey, currentFocus.id);
-  const recentEvidenceSignals = getRecentEvidenceSignals(journey).slice(0, 1);
+  const recentEvidenceSignal = getRecentEvidenceSignals(journey, currentFocus.id)[0];
   const reflectionCount = journey.reflections.length;
   const triedTechniqueCount = journey.focusAreas.flatMap((focusArea) => focusArea.techniques).filter(
     (technique) => technique.tried,
   ).length;
   const insightCount = journey.insights.length;
+  const currentFocusReflectionCount = journey.reflections.filter(
+    (reflection) => reflection.focusAreaId === currentFocus.id,
+  ).length;
+  const currentFocusTriedCount = currentFocus.techniques.filter((technique) => technique.tried).length;
   const latestReflectionDate = recentReflection
     ? new Date(recentReflection.createdAt).toLocaleDateString('en-GB', {
         day: 'numeric',
@@ -66,63 +81,15 @@ export const HomePage = () => {
         month: 'short',
       })
     : null;
-  const showcaseItems = [
-    {
-      eyebrow: 'Current focus',
-      title: currentFocus.name,
-      copy: 'Keep the most important classroom improvement thread visible so your next step stays concrete.',
-      meta: `${currentFocus.resources.length} supporting resources`,
-    },
-    {
-      eyebrow: 'Active goal',
-      title: activeGoal ? activeGoal.title : 'Set a practical next goal',
-      copy: activeGoal
-        ? 'Turn that priority into a visible classroom habit you can revisit, refine, and strengthen over time.'
-        : 'Turn one recent insight into a clear, achievable next move for classroom practice.',
-      meta: activeGoalDate ? `Set ${activeGoalDate}` : 'Ready from the latest insight',
-    },
-    {
-      eyebrow: 'Evidence signal',
-      title: recentEvidenceSignals[0] ? 'Student voice suggests more wait time' : 'No evidence linked yet',
-      copy:
-        recentEvidenceSignals[0]?.summary ??
-        'When feedback or observation notes are linked, they appear here to guide your reflection.',
-      meta:
-        recentEvidenceSignals[0]?.sourceType === 'student-survey'
-          ? 'Student survey'
-          : recentEvidenceSignals[0]
-            ? 'Mentor observation'
-            : 'Awaiting evidence',
-    },
-    {
-      eyebrow: 'Reflection loop',
-      title: recentReflection ? 'Latest reflection captured' : 'Reflection still to write',
-      copy: recentReflection
-        ? recentReflection.improveNext
-        : 'Use a short reflection to review what happened in the lesson and decide what to refine next.',
-      meta: latestReflectionDate ? `Saved ${latestReflectionDate}` : 'No reflection yet',
-    },
-    {
-      eyebrow: 'CPD passport',
-      title: 'Professional development record',
-      copy: 'Keep evidence, reflection, and goal-setting visible in one running record you can return to over time.',
-      meta: `${reflectionCount + insightCount + triedTechniqueCount} journey signals recorded`,
-    },
-  ];
-  const rotatedShowcaseItems = showcaseItems.map(
-    (_, index) => showcaseItems[(index + showcaseIndex) % showcaseItems.length],
-  );
-  const visibleShowcaseItems = rotatedShowcaseItems.slice(0, 3);
-
-  const handleShowcasePrevious = () => {
-    setShowcaseIndex((currentIndex) =>
-      currentIndex === 0 ? showcaseItems.length - 1 : currentIndex - 1,
-    );
-  };
-
-  const handleShowcaseNext = () => {
-    setShowcaseIndex((currentIndex) => (currentIndex + 1) % showcaseItems.length);
-  };
+  const recordSignalCount = reflectionCount + insightCount + triedTechniqueCount;
+  const currentFocusReflectionPath = `${appRoutes.reflection}?focus=${currentFocus.id}`;
+  const evidenceReflectionPath = recentEvidenceSignal
+    ? `${appRoutes.reflection}?focus=${recentEvidenceSignal.focusAreaId}`
+    : currentFocusReflectionPath;
+  const draftFocus = savedDraft
+    ? journey.focusAreas.find((focusArea) => focusArea.id === savedDraft.focusAreaId)
+    : null;
+  const draftPath = savedDraft ? buildReflectionDraftPath(savedDraft) : null;
 
   return (
     <Layout>
@@ -130,374 +97,250 @@ export const HomePage = () => {
         <div className={styles.welcome}>
           <SectionHeader
             title="Welcome back, Vishal"
-            copy="Continue your development cycle with focused, evidence-informed next steps for classroom practice."
+            copy="Continue your development cycle with one clear priority, a visible next step, and a short route back into reflection."
           />
         </div>
 
-        <section className={styles.storyBanner}>
-          <div className={styles.storyBannerContent}>
-            <div className={styles.storyBannerCopy}>
-              <span className={styles.storyBannerEyebrow}>Research-led professional learning</span>
-              <h2 className={styles.storyBannerTitle}>
-                A clearer home for <span className={styles.storyBannerAccent}>evidence</span>,{' '}
-                <span className={styles.storyBannerAccent}>reflection</span>, and{' '}
-                <span className={styles.storyBannerAccent}>next teaching steps</span>
+        <section className={styles.heroSection}>
+          <div className={styles.heroArtwork} aria-hidden="true">
+            <GoalRoadmapScene className={styles.heroArtworkScene} />
+          </div>
+
+          <div className={styles.heroCard}>
+            <div className={styles.heroIntro}>
+              <span className={styles.eyebrow}>Overview</span>
+              <h2 className={styles.heroTitle}>
+                Keep your current <span className={styles.heroAccent}>focus</span> moving
               </h2>
-              <p className={styles.storyBannerText}>
-                Bring together feedback, deliberate practice, and reflection in one structured workspace aligned to the Model for Great Teaching.
+              <p className={styles.heroCopy}>
+                Start from one practical classroom priority, keep the goal in view, and return to the next action without wading through the whole product.
               </p>
-              <div className={styles.storyHighlights}>
-                <div className={styles.storyHighlight}>
-                  <div>
-                    <strong className={styles.storyHighlightTitle}>Research-led</strong>
-                    <span className={styles.storyHighlightText}>Grounded in effective professional learning</span>
-                  </div>
-                </div>
-                <div className={styles.storyHighlight}>
-                  <div>
-                    <strong className={styles.storyHighlightTitle}>Structured cycle</strong>
-                    <span className={styles.storyHighlightText}>From evidence review to next lesson action</span>
-                  </div>
-                </div>
-                <div className={styles.storyHighlight}>
-                  <div>
-                    <strong className={styles.storyHighlightTitle}>Model aligned</strong>
-                    <span className={styles.storyHighlightText}>Built around the Great Teaching framework</span>
-                  </div>
-                </div>
+            </div>
+
+            <div className={styles.heroPrimary}>
+              <div className={styles.metaRow}>
+                <span className={styles.metaPill}>Current focus</span>
+                <span className={styles.metaPill}>{currentFocusProgress.progress}% progress</span>
+                {activeGoalDate ? <span className={styles.metaPill}>Goal set {activeGoalDate}</span> : null}
               </div>
-              <div className={styles.storyBannerActions}>
-                <Link className={buttonClassName('primary')} to={appRoutes.focusAreaById(currentFocus.id)}>
+
+              <div className={styles.focusBlock}>
+                <span className={styles.sectionLabel}>Focus area</span>
+                <h3 className={styles.focusTitle}>{currentFocus.name}</h3>
+                <p className={styles.bodyText}>{currentFocus.progressNotes}</p>
+              </div>
+
+              <div className={styles.heroActionPanel}>
+                <div className={styles.heroActionIntro}>
+                  <span className={styles.sectionLabel}>Recommended next step</span>
+                  <strong className={styles.calloutTitle}>{nextStep.title}</strong>
+                  <p className={styles.summaryText}>{nextStep.description}</p>
+                </div>
+
+                {activeGoal ? (
+                  <div className={styles.supportingLine}>
+                    <span className={styles.noteLabel}>Active goal</span>
+                    <p className={styles.noteText}>{activeGoal.title}</p>
+                  </div>
+                ) : null}
+
+                {latestInsight ? (
+                  <div className={styles.supportingLine}>
+                    <span className={styles.noteLabel}>Latest insight</span>
+                    <p className={styles.noteText}>{latestInsight.title}</p>
+                  </div>
+                ) : null}
+
+                {suggestedTechnique ? (
+                  <div className={styles.supportingLine}>
+                    <span className={styles.noteLabel}>Best technique to open</span>
+                    <p className={styles.noteText}>{suggestedTechnique.title}</p>
+                  </div>
+                ) : null}
+              </div>
+
+              {savedDraft && draftFocus && draftPath ? (
+                <div className={styles.resumeDraft}>
+                  <div className={styles.resumeDraftCopy}>
+                    <span className={styles.noteLabel}>Saved reflection draft</span>
+                    <p className={styles.noteText}>
+                      Resume your {draftFocus.name.toLowerCase()} note saved {formatSavedAt(savedDraft.updatedAt)} on this device.
+                    </p>
+                  </div>
+                  <Link className={styles.resumeDraftLink} to={draftPath}>
+                    Resume draft
+                  </Link>
+                </div>
+              ) : null}
+
+              <div className={styles.actions}>
+                <Link className={buttonClassName('primary')} to={nextStep.path}>
+                  {nextStep.actionLabel}
+                </Link>
+                <Link className={buttonClassName('secondary')} to={appRoutes.focusAreaById(currentFocus.id)}>
                   Explore current focus
                 </Link>
-                <Link className={buttonClassName('secondary')} to={appRoutes.passport}>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className={styles.progressSection} aria-label="Progress snapshot">
+          <div className={styles.progressSectionInner}>
+            <div className={`${styles.progressPanel} ${styles.progressPanelSurface}`}>
+              <div className={styles.panelHeader}>
+                <div>
+                  <span className={styles.sectionLabel}>Progress snapshot</span>
+                  <h3 className={styles.panelTitle}>What to keep in view this week</h3>
+                </div>
+                <strong className={styles.progressValue}>{currentFocusProgress.progress}%</strong>
+              </div>
+
+              <p className={styles.bodyText}>
+                Keep building {currentFocus.name.toLowerCase()} through one next lesson move, one reflection, and one clear follow-up.
+              </p>
+
+              <ProgressBar
+                label={`${currentFocus.name} progress`}
+                value={currentFocusProgress.progress}
+                color="var(--success)"
+                showValue={false}
+              />
+
+              <div className={styles.statsGrid}>
+                <div className={styles.statCard}>
+                  <span className={styles.statLabel}>Reflections</span>
+                  <strong className={styles.statValue}>{currentFocusReflectionCount}</strong>
+                </div>
+                <div className={styles.statCard}>
+                  <span className={styles.statLabel}>Techniques tried</span>
+                  <strong className={styles.statValue}>{currentFocusTriedCount}</strong>
+                </div>
+                <div className={styles.statCard}>
+                  <span className={styles.statLabel}>Resources</span>
+                  <strong className={styles.statValue}>{currentFocus.resources.length}</strong>
+                </div>
+                <div className={styles.statCard}>
+                  <span className={styles.statLabel}>Record signals</span>
+                  <strong className={styles.statValue}>{recordSignalCount}</strong>
+                </div>
+              </div>
+
+              <div className={styles.actions}>
+                <Link className={buttonClassName('secondary')} to={appRoutes.progress}>
+                  View progress
+                </Link>
+                <Link className={buttonClassName('ghost')} to={appRoutes.passport}>
                   Open CPD record
                 </Link>
               </div>
-              <div className={styles.bannerMetricRow}>
-                <div className={styles.bannerMetricCard}>
-                  <span className={styles.bannerMetricLabel}>Reflections</span>
-                  <strong className={styles.bannerMetricValue}>{reflectionCount}</strong>
-                </div>
-                <div className={styles.bannerMetricCard}>
-                  <span className={styles.bannerMetricLabel}>Strategies tried</span>
-                  <strong className={styles.bannerMetricValue}>{triedTechniqueCount}</strong>
-                </div>
-                <div className={styles.bannerMetricCard}>
-                  <span className={styles.bannerMetricLabel}>Insights</span>
-                  <strong className={styles.bannerMetricValue}>{insightCount}</strong>
-                </div>
-              </div>
-            </div>
-            <div className={styles.storyBannerVisual}>
-              <ResearchLearningScene />
             </div>
           </div>
         </section>
 
-        <section className={styles.showcaseSection} aria-label="Professional learning highlights">
-          <div className={styles.showcaseHeader}>
-            <span className={styles.showcaseEyebrow}>Professional learning highlights</span>
-            <h2 className={styles.showcaseTitle}>Keep the whole development cycle in view</h2>
-            <p className={styles.showcaseCopy}>
-              A clearer product view of the pieces that shape better teaching: focus, evidence, reflection, goals, and your professional record.
-            </p>
+        <section className={styles.snapshotSection} aria-label="Overview details">
+          <div className={styles.snapshotSectionHeader}>
+            <span className={styles.snapshotSectionEyebrow}>Cycle touchpoints</span>
+            <h2 className={styles.snapshotSectionTitle}>Keep the next three things visible</h2>
           </div>
 
-          <button
-            aria-label="Show previous highlight"
-            className={`${styles.showcaseControl} ${styles.showcaseControlLeft}`}
-            onClick={handleShowcasePrevious}
-            type="button"
-          >
-            ‹
-          </button>
-
-          <div className={styles.showcaseGrid}>
-            {visibleShowcaseItems.map((item) => (
-              <article className={styles.showcaseCard} key={`${item.eyebrow}-${item.title}`}>
-                <span className={styles.showcaseCardEyebrow}>{item.eyebrow}</span>
-                <h3 className={styles.showcaseCardTitle}>{item.title}</h3>
-                <p className={styles.showcaseCardCopy}>{item.copy}</p>
-                <span className={styles.showcaseCardMeta}>{item.meta}</span>
-              </article>
-            ))}
-          </div>
-
-          <button
-            aria-label="Show next highlight"
-            className={`${styles.showcaseControl} ${styles.showcaseControlRight}`}
-            onClick={handleShowcaseNext}
-            type="button"
-          >
-            ›
-          </button>
-        </section>
-
-        <section className={styles.featureSection}>
-          <div className={styles.featureVisual}>
-            <GuidanceFlowScene />
-          </div>
-
-          <div className={styles.featureContent}>
-            <span className={styles.featureEyebrow}>Coaching and guidance</span>
-            <h2 className={styles.featureTitle}>Expert support, built into the development cycle</h2>
-            <p className={styles.featureCopy}>
-              Keep practical guidance close to the classroom. Evidence signals, suggested techniques, and reflection prompts stay connected so the next improvement step feels clear rather than overwhelming.
-            </p>
-            <div className={styles.featureList}>
-              <div className={styles.featureListItem}>
-                <div>
-                  <strong className={styles.featureListTitle}>Evidence stays visible</strong>
-                  <span className={styles.featureListText}>
-                    Student voice and observation notes remain connected to the next lesson move.
-                  </span>
-                </div>
+          <div className={styles.snapshotGrid}>
+            <Card className={styles.snapshotCard}>
+              <div className={styles.cardHeader}>
+                <span className={styles.eyebrow}>Recent reflection</span>
+                <h2 className={styles.cardTitle}>What happened most recently in class</h2>
               </div>
-              <div className={styles.featureListItem}>
-                <div>
-                  <strong className={styles.featureListTitle}>Techniques stay practical</strong>
-                  <span className={styles.featureListText}>
-                    Recommended strategies sit alongside reflection, not in a separate research silo.
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className={styles.featureActions}>
-              <Link className={buttonClassName('primary')} to={appRoutes.reflection}>
-                Write reflection
-              </Link>
-              <Link className={buttonClassName('secondary')} to={appRoutes.focusAreaById(currentFocus.id)}>
-                Explore guidance
-              </Link>
-            </div>
-          </div>
-        </section>
 
-        <div className={styles.pageFlow}>
-          <section className={`${styles.sectionPanel} ${styles.heroSection}`}>
-            <div className={styles.sectionHeaderBlock}>
-              <span className={styles.sectionEyebrow}>Current goal</span>
-              <h2 className={styles.sectionTitle}>Keep your development focus visible</h2>
-              <p className={styles.sectionCopy}>
-                Start from one concrete improvement priority, keep the evidence close, and move into the next lesson with a clear classroom action.
-              </p>
-            </div>
-
-            <div className={`${styles.cardBody} ${styles.primaryPanel}`}>
-              <div className={styles.heroLayout}>
-                <div className={styles.heroContent}>
-                  <div className={styles.inlineMeta}>
-                    <span className={styles.metaLabel}>Current development focus</span>
-                    {activeGoalDate ? <span className={styles.metaLabel}>Set {activeGoalDate}</span> : null}
-                  </div>
-                  <h2 className={styles.primaryTitle}>
-                    {activeGoal ? activeGoal.title : 'Set a goal from a reflection insight'}
-                  </h2>
-                  <p className={styles.primaryText}>
-                    {activeGoal
-                      ? activeGoal.description
-                      : 'Turn one practical insight from recent teaching into a clear, achievable next goal.'}
-                  </p>
-                  <div className={styles.cycleStrip} aria-label="Current development cycle">
-                    <span className={`${styles.cycleStep} ${styles.cycleStepActive}`}>Feedback reviewed</span>
-                    <span className={styles.cycleStep}>Resources explored</span>
-                    <span className={styles.cycleStep}>Deliberate practice</span>
-                    <span className={styles.cycleStep}>Reflection logged</span>
-                  </div>
-                  {latestInsight ? (
-                    <div className={styles.noteBlock}>
-                      <span className={styles.noteLabel}>Set from latest insight</span>
-                      <p className={styles.noteText}>{latestInsight.title}</p>
-                    </div>
-                  ) : null}
-                  <div className={styles.actions}>
-                    <Link className={buttonClassName('primary')} to={appRoutes.reflection}>
-                      Review insights
-                    </Link>
-                    <Link className={buttonClassName('ghost')} to={appRoutes.focusAreaById(currentFocus.id)}>
-                      Open focus area
-                    </Link>
-                  </div>
-                </div>
-
-                <div className={styles.heroAside}>
-                  <div className={styles.visualPanel}>
-                    <GoalRoadmapScene />
-                  </div>
-                  <div className={styles.snapshotCard}>
-                    <span className={styles.snapshotLabel}>Current element focus</span>
-                    <strong className={styles.snapshotValue}>{currentFocus.name}</strong>
-                    <p className={styles.snapshotText}>
-                      Aligned to the element you are currently strengthening in classroom practice.
-                    </p>
-                  </div>
-                  <div className={styles.snapshotCard}>
-                    <span className={styles.snapshotLabel}>Latest practice note</span>
-                    <strong className={styles.snapshotValue}>
-                      {latestReflectionDate ? `Saved ${latestReflectionDate}` : 'No reflection yet'}
-                    </strong>
-                    <p className={styles.snapshotText}>
-                      {recentReflection
-                        ? 'Use the latest classroom note to sharpen the next classroom move.'
-                        : 'Your next saved reflection will appear here as part of the cycle.'}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section className={styles.sectionPanel}>
-            <div className={styles.sectionHeaderBlock}>
-              <span className={styles.sectionEyebrow}>This week&apos;s practice</span>
-              <h2 className={styles.sectionTitle}>Move from intention into classroom action</h2>
-              <p className={styles.sectionCopy}>
-                Keep momentum with one visible next step, a simple progress view, and a clear sense of what to do in the next lesson.
-              </p>
-            </div>
-            <div className={styles.summaryRow}>
-              <Card className={`${styles.cardBody} ${styles.supportingCard} ${styles.metricsCard}`}>
-                <div className={styles.panelHeader}>
-                  <h2 className={styles.cardTitle}>Your progress this week</h2>
-                <span className={styles.metric}>60%</span>
-              </div>
-              <p className={styles.cardText}>
-                You’ve completed 2 reflections and tried 1 new technique.
-              </p>
-              <ProgressBar label="Weekly goal" value={60} color="var(--success)" showValue={false} />
-              <div className={styles.progressMetaRow}>
-                <span className={styles.progressMetaLabel}>
-                  2 reflections and 1 technique trial recorded this week
-                </span>
-              </div>
-              <div className={styles.inlineStats}>
-                <span className={styles.inlineStat}><strong>2</strong> reflections</span>
-                <span className={styles.inlineStat}><strong>1</strong> technique tried</span>
-                <span className={styles.inlineStat}><strong>1</strong> insight used</span>
-              </div>
-            </Card>
-
-            <Card className={`${styles.cardBody} ${styles.supportingCard} ${styles.practiceCard}`}>
-                  <h2 className={styles.cardTitle}>Today&apos;s practice</h2>
-                  <div className={styles.practiceStack}>
-                    <div className={styles.practiceBlock}>
-                      <span className={styles.metaLabel}>Recommended next step</span>
-                      <p className={styles.cardText}>{nextStep.description}</p>
-                    </div>
-                    <div className={styles.practiceBlock}>
-                      <span className={styles.metaLabel}>Next lesson priority</span>
-                      <p className={styles.focusTitle}>{activeGoal ? activeGoal.title : currentFocus.currentGoal}</p>
-                      <p className={styles.cardText}>
-                        Use one practical move in the next lesson, then capture what happened while it is still fresh.
-                      </p>
-                    </div>
-                  </div>
-              <div className={styles.actions}>
-                <Link className={buttonClassName('primary')} to={nextStep.path}>
-                  Write reflection
-                </Link>
-                <Link className={buttonClassName('secondary')} to={appRoutes.focusAreaById(currentFocus.id)}>
-                  Continue
-                </Link>
-              </div>
-            </Card>
-            </div>
-          </section>
-
-          <section className={`${styles.sectionPanel} ${styles.detailSection}`}>
-            <div className={styles.sectionHeaderBlock}>
-              <span className={styles.sectionEyebrow}>Reflection and support</span>
-              <h2 className={styles.sectionTitle}>Review what happened and decide what to do next</h2>
-              <p className={styles.sectionCopy}>
-                Capture what you noticed in the classroom, then use related techniques and feedback signals to shape the next cycle.
-              </p>
-            </div>
-            <div className={styles.detailRow}>
-            <Card className={`${styles.cardBody} ${styles.supportingCard}`}>
-              <div className={styles.panelHeader}>
-                <h2 className={styles.cardTitle}>Your latest reflection</h2>
-                {latestReflectionDate ? <span className={styles.metaLabel}>Saved {latestReflectionDate}</span> : null}
-              </div>
               {recentReflection ? (
                 <>
+                  <div className={styles.metaRow}>
+                    <span className={styles.metaPill}>{recentReflection.focusAreaName}</span>
+                    {latestReflectionDate ? <span className={styles.metaPill}>Saved {latestReflectionDate}</span> : null}
+                  </div>
                   <p className={styles.quote}>“{recentReflection.wentWell}”</p>
-                  <p className={styles.cardText}>
+                  <p className={styles.bodyText}>
                     <strong>Next refinement:</strong> {recentReflection.improveNext}
                   </p>
                 </>
               ) : (
                 <EmptyState
                   title="No reflections yet"
-                  copy="No reflections yet"
-                  action={
-                    <Link className={buttonClassName('secondary')} to={appRoutes.reflection}>
-                      Add reflection
-                    </Link>
-                  }
+                  copy="Your latest classroom reflection will appear here to guide the next cycle."
                 />
               )}
+
+              <div className={styles.actions}>
+                <Link className={buttonClassName('secondary')} to={currentFocusReflectionPath}>
+                  Write reflection
+                </Link>
+              </div>
             </Card>
 
-            <Card className={`${styles.cardBody} ${styles.supportingCard} ${styles.infoCard}`}>
-              <div className={styles.supportBlock}>
-                <h2 className={styles.cardTitle}>Suggested technique</h2>
-                {suggestedTechnique ? (
-                  <>
-                    <p className={styles.cardText}>
-                      {suggestedTechnique.summary}
-                    </p>
-                    <div className={styles.actions}>
-                        <Link
-                          className={buttonClassName('secondary')}
-                          to={`${appRoutes.focusAreaById(currentFocus.id)}?technique=${suggestedTechnique.id}`}
-                        >
-                          View technique
-                        </Link>
-                    </div>
-                  </>
-                ) : (
-                  <EmptyState title="No techniques yet" copy="No techniques yet" />
-                )}
+            <Card className={styles.snapshotCard}>
+              <div className={styles.cardHeader}>
+                <span className={styles.eyebrow}>Evidence signal</span>
+                <h2 className={styles.cardTitle}>One piece of evidence to keep visible</h2>
               </div>
 
-              <div className={styles.sectionDivider} />
+              {recentEvidenceSignal ? (
+                <>
+                  <div className={styles.metaRow}>
+                    <span className={styles.signalTag}>
+                      {recentEvidenceSignal.sourceType === 'student-survey' ? 'Student survey' : 'Observation note'}
+                    </span>
+                    <span className={styles.metaPill}>{recentEvidenceSignal.focusAreaName}</span>
+                  </div>
+                  <strong className={styles.detailTitle}>{recentEvidenceSignal.title}</strong>
+                  <p className={styles.bodyText}>{recentEvidenceSignal.summary}</p>
+                </>
+              ) : (
+                <EmptyState
+                  title="No evidence linked yet"
+                  copy="Survey or observation signals will appear here when they are ready to shape the next reflection."
+                />
+              )}
 
-              <div className={`${styles.supportBlock} ${styles.feedbackSnapshot}`}>
-                <h2 className={styles.cardTitle}>Evidence preview</h2>
-                <p className={styles.cardText}>
-                  Keep one evidence signal in view, then review it in reflection when you are ready to turn it into the next insight.
-                </p>
-                <div className={styles.evidenceList}>
-                  {recentEvidenceSignals.map((signal) => {
-                    const sourceLabel =
-                      signal.sourceType === 'student-survey' ? 'Student survey' : 'Mentor observation';
+              <div className={styles.actions}>
+                <Link className={buttonClassName('secondary')} to={evidenceReflectionPath}>
+                  Review in reflection
+                </Link>
+              </div>
+            </Card>
 
-                    return (
-                      <article className={styles.evidenceCard} key={signal.id}>
-                        <div className={styles.evidenceTop}>
-                          <span className={styles.evidenceSource}>{sourceLabel}</span>
-                          <span className={styles.metaLabel}>{signal.focusAreaName}</span>
-                        </div>
-                        <p className={styles.evidenceTitle}>{signal.title}</p>
-                        <p className={styles.evidenceText}>{signal.summary}</p>
-                        <div className={styles.actions}>
-                          <Link
-                            className={buttonClassName('secondary')}
-                            to={`${appRoutes.reflection}?focus=${signal.focusAreaId}`}
-                          >
-                            Review in reflection
-                          </Link>
-                        </div>
-                      </article>
-                    );
-                  })}
+            <Card className={styles.snapshotCard}>
+              <div className={styles.cardHeader}>
+                <span className={styles.eyebrow}>Suggested support</span>
+                <h2 className={styles.cardTitle}>Keep guidance and record close by</h2>
+              </div>
+
+              {suggestedTechnique ? (
+                <div className={styles.supportBlock}>
+                  <span className={styles.sectionLabel}>Suggested technique</span>
+                  <strong className={styles.detailTitle}>{suggestedTechnique.title}</strong>
+                  <p className={styles.bodyText}>{suggestedTechnique.summary}</p>
                 </div>
+              ) : (
+                <EmptyState title="No techniques yet" copy="Guidance will appear here when a focus area has practical strategies ready to review." />
+              )}
+
+              <div className={styles.recordBlock}>
+                <span className={styles.sectionLabel}>Professional development record</span>
+                <p className={styles.bodyText}>
+                  {recordSignalCount} journey signals are already recorded across reflection, insight, and classroom practice.
+                </p>
+              </div>
+
+              <div className={styles.actions}>
+                <Link className={buttonClassName('secondary')} to={appRoutes.focusAreaById(currentFocus.id)}>
+                  Open guidance
+                </Link>
+                <Link className={buttonClassName('ghost')} to={appRoutes.passport}>
+                  Open CPD record
+                </Link>
               </div>
             </Card>
-            </div>
-          </section>
-        </div>
+          </div>
+        </section>
       </section>
     </Layout>
   );

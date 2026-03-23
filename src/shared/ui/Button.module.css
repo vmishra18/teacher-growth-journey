@@ -9,16 +9,16 @@
   font-weight: 600;
   letter-spacing: 0;
   transition:
-    transform 180ms ease,
-    background-color 180ms ease,
-    background-image 180ms ease,
-    border-color 180ms ease,
-    color 180ms ease,
-    box-shadow 180ms ease;
+    transform var(--motion-fast) var(--ease-standard),
+    background-color var(--motion-fast) var(--ease-standard),
+    background-image var(--motion-fast) var(--ease-standard),
+    border-color var(--motion-fast) var(--ease-standard),
+    color var(--motion-fast) var(--ease-standard),
+    box-shadow var(--motion-fast) var(--ease-standard);
 }
 
 .button:hover:not(:disabled) {
-  transform: translateY(-1px) scale(1.01);
+  transform: translateY(-2px);
 }
 
 .button:disabled {
@@ -26,42 +26,49 @@
   cursor: not-allowed;
 }
 
+.button:focus-visible {
+  outline-offset: 4px;
+  box-shadow:
+    0 0 0 4px rgba(37, 99, 235, 0.14),
+    var(--shadow-card);
+}
+
 .primary {
   background: linear-gradient(135deg, #f39a34 0%, #e27d17 100%);
   color: white;
-  box-shadow: 0 14px 24px rgba(226, 125, 23, 0.22);
+  box-shadow: 0 10px 18px rgba(226, 125, 23, 0.18);
 }
 
 .primary:hover:not(:disabled) {
   background: #111111;
   border-color: #111111;
-  box-shadow: 0 18px 30px rgba(17, 17, 17, 0.2);
+  box-shadow: 0 14px 24px rgba(17, 17, 17, 0.16);
 }
 
 .secondary {
   border-color: #e27d17;
   background: linear-gradient(135deg, #f39a34 0%, #e27d17 100%);
   color: white;
-  box-shadow: 0 14px 24px rgba(226, 125, 23, 0.18);
+  box-shadow: 0 10px 18px rgba(226, 125, 23, 0.16);
 }
 
 .secondary:hover:not(:disabled) {
   background: #111111;
   border-color: #111111;
-  box-shadow: 0 18px 30px rgba(17, 17, 17, 0.18);
+  box-shadow: 0 14px 24px rgba(17, 17, 17, 0.16);
 }
 
 .ghost {
   color: white;
   background: linear-gradient(135deg, #f39a34 0%, #e27d17 100%);
   border-color: #e27d17;
-  box-shadow: 0 14px 24px rgba(226, 125, 23, 0.14);
+  box-shadow: 0 10px 18px rgba(226, 125, 23, 0.14);
 }
 
 .ghost:hover:not(:disabled) {
   background: #111111;
   border-color: #111111;
-  box-shadow: 0 18px 30px rgba(17, 17, 17, 0.18);
+  box-shadow: 0 14px 24px rgba(17, 17, 17, 0.16);
 }
 
 .button + .button {
@@ -75,9 +82,39 @@
   background: #111111;
   color: white;
   border-color: #111111;
-  box-shadow: 0 18px 30px rgba(17, 17, 17, 0.18);
+  box-shadow: 0 14px 24px rgba(17, 17, 17, 0.16);
+}
+
+:global(html[data-theme='dark']) .button + .button {
+  background: transparent;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.92);
+  box-shadow: none;
+}
+
+:global(html[data-theme='dark']) .button + .button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.92);
+  color: #111111;
+  border-color: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 14px 24px rgba(0, 0, 0, 0.16);
+}
+
+:global(html[data-theme='dark']) .primary:hover:not(:disabled),
+:global(html[data-theme='dark']) .secondary:hover:not(:disabled),
+:global(html[data-theme='dark']) .ghost:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.92);
+  color: #111111;
+  border-color: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 14px 24px rgba(0, 0, 0, 0.16);
 }
 
 .fullWidth {
   width: 100%;
+}
+
+@media (max-width: 640px) {
+  .button {
+    width: 100%;
+    padding: 0.92rem 1rem;
+  }
 }

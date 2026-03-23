@@ -2,6 +2,8 @@
   position: relative;
   width: min(100%, 33rem);
   margin-inline: auto;
+  animation: sceneEnter 680ms var(--ease-standard);
+  will-change: transform, opacity;
 }
 
 .glow {
@@ -84,7 +86,20 @@
   }
 }
 
+@keyframes sceneEnter {
+  from {
+    opacity: 0;
+    transform: translate3d(28px, 0, 0) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .scene,
   .board,
   .reflectionCard,
   .evidenceCard,

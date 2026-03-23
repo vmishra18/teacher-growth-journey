@@ -3,6 +3,8 @@
   width: min(100%, 31rem);
   margin-inline: auto;
   padding: 0.6rem;
+  animation: sceneEnter 680ms var(--ease-standard);
+  will-change: transform, opacity;
 }
 
 .orbit {
@@ -87,6 +89,18 @@
   }
 }
 
+@keyframes sceneEnter {
+  from {
+    opacity: 0;
+    transform: translate3d(28px, 0, 0) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
 @media (max-width: 720px) {
   .scene {
     width: min(100%, 27rem);
@@ -95,6 +109,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .scene,
   .centerStage,
   .evidenceCard,
   .techniqueCard,

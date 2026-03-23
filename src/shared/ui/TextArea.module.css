@@ -17,3 +17,7 @@
   background: var(--surface-strong);
   color: var(--text);
 }
+
+.textarea:focus-visible {
+  outline-offset: 3px;
+}
