@@ -262,6 +262,28 @@
   margin-top: 0.15rem;
 }
 
+.snapshotActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: auto;
+  padding-top: 0.25rem;
+}
+
+.snapshotActionsSplit {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+.snapshotActionsSplit > * {
+  min-width: 0;
+  width: 100%;
+  padding-inline: 0.85rem;
+  font-size: 0.92rem;
+  white-space: nowrap;
+}
+
 .visualPanel {
   min-width: 0;
   padding: 0.15rem 0 0.1rem;
@@ -309,8 +331,19 @@
 }
 
 .progressValue {
-  font-size: 1.7rem;
-  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 4.2rem;
+  padding: 0.36rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface-glass-soft);
+  color: var(--primary);
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
 }
 
 .statsGrid {
@@ -508,6 +541,12 @@
   }
 
   .actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .snapshotActions,
+  .snapshotActionsSplit {
     display: grid;
     grid-template-columns: 1fr;
   }

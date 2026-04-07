@@ -11,6 +11,6 @@ describe('FocusAreasPage', () => {
     expect(screen.getByRole('heading', { name: /Feedback/i })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: /Classroom routines/i })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: /Supportive environment/i })).toBeInTheDocument();
-    expect(screen.getByText(/Current focus/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Current focus/i).length).toBeGreaterThan(0);
   });
 });

@@ -16,8 +16,20 @@
 }
 
 .value {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 3.4rem;
+  padding: 0.22rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface-glass-soft);
+  color: var(--primary);
+  font-size: 0.78rem;
   font-weight: 700;
-  color: var(--text);
+  letter-spacing: 0.04em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
 .track {

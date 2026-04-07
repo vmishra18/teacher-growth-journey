@@ -8,7 +8,7 @@ describe('PassportPage', () => {
     renderWithApp(<PassportPage />, appRoutes.passport, appRoutes.passport);
 
     expect(await screen.findByRole('heading', { name: /Professional development record/i })).toBeInTheDocument();
-    expect(screen.getByText(/This term's professional development activity/i)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /^Development activity$/i })).toBeInTheDocument();
     expect(screen.getByText(/Tried open-ended questions in classroom practice/i)).toBeInTheDocument();
     expect(screen.getAllByText(/Logged a reflection on classroom practice/i).length).toBeGreaterThan(0);
   });

@@ -96,8 +96,8 @@ export const HomePage = () => {
       <section className={styles.page}>
         <div className={styles.welcome}>
           <SectionHeader
-            title="Welcome back, Vishal"
-            copy="Continue your development cycle with one clear priority, a visible next step, and a short route back into reflection."
+            title="Welcome back"
+            copy="Pick up your current focus and take the next useful step."
           />
         </div>
 
@@ -113,7 +113,7 @@ export const HomePage = () => {
                 Keep your current <span className={styles.heroAccent}>focus</span> moving
               </h2>
               <p className={styles.heroCopy}>
-                Start from one practical classroom priority, keep the goal in view, and return to the next action without wading through the whole product.
+                Start from one classroom priority and move straight to the next action.
               </p>
             </div>
 
@@ -153,7 +153,7 @@ export const HomePage = () => {
 
                 {suggestedTechnique ? (
                   <div className={styles.supportingLine}>
-                    <span className={styles.noteLabel}>Best technique to open</span>
+                    <span className={styles.noteLabel}>Suggested technique</span>
                     <p className={styles.noteText}>{suggestedTechnique.title}</p>
                   </div>
                 ) : null}
@@ -197,7 +197,7 @@ export const HomePage = () => {
               </div>
 
               <p className={styles.bodyText}>
-                Keep building {currentFocus.name.toLowerCase()} through one next lesson move, one reflection, and one clear follow-up.
+                Keep building {currentFocus.name.toLowerCase()} through practice, reflection, and one clear follow-up.
               </p>
 
               <ProgressBar
@@ -241,14 +241,14 @@ export const HomePage = () => {
         <section className={styles.snapshotSection} aria-label="Overview details">
           <div className={styles.snapshotSectionHeader}>
             <span className={styles.snapshotSectionEyebrow}>Cycle touchpoints</span>
-            <h2 className={styles.snapshotSectionTitle}>Keep the next three things visible</h2>
+            <h2 className={styles.snapshotSectionTitle}>What to revisit next</h2>
           </div>
 
           <div className={styles.snapshotGrid}>
             <Card className={styles.snapshotCard}>
               <div className={styles.cardHeader}>
                 <span className={styles.eyebrow}>Recent reflection</span>
-                <h2 className={styles.cardTitle}>What happened most recently in class</h2>
+                <h2 className={styles.cardTitle}>Latest lesson note</h2>
               </div>
 
               {recentReflection ? (
@@ -265,11 +265,11 @@ export const HomePage = () => {
               ) : (
                 <EmptyState
                   title="No reflections yet"
-                  copy="Your latest classroom reflection will appear here to guide the next cycle."
+                  copy="Your latest reflection will appear here."
                 />
               )}
 
-              <div className={styles.actions}>
+              <div className={styles.snapshotActions}>
                 <Link className={buttonClassName('secondary')} to={currentFocusReflectionPath}>
                   Write reflection
                 </Link>
@@ -278,8 +278,8 @@ export const HomePage = () => {
 
             <Card className={styles.snapshotCard}>
               <div className={styles.cardHeader}>
-                <span className={styles.eyebrow}>Evidence signal</span>
-                <h2 className={styles.cardTitle}>One piece of evidence to keep visible</h2>
+                <span className={styles.eyebrow}>Evidence</span>
+                <h2 className={styles.cardTitle}>Evidence to keep in view</h2>
               </div>
 
               {recentEvidenceSignal ? (
@@ -296,11 +296,11 @@ export const HomePage = () => {
               ) : (
                 <EmptyState
                   title="No evidence linked yet"
-                  copy="Survey or observation signals will appear here when they are ready to shape the next reflection."
+                  copy="Survey or observation signals will appear here."
                 />
               )}
 
-              <div className={styles.actions}>
+              <div className={styles.snapshotActions}>
                 <Link className={buttonClassName('secondary')} to={evidenceReflectionPath}>
                   Review in reflection
                 </Link>
@@ -310,7 +310,7 @@ export const HomePage = () => {
             <Card className={styles.snapshotCard}>
               <div className={styles.cardHeader}>
                 <span className={styles.eyebrow}>Suggested support</span>
-                <h2 className={styles.cardTitle}>Keep guidance and record close by</h2>
+                <h2 className={styles.cardTitle}>Guidance and record</h2>
               </div>
 
               {suggestedTechnique ? (
@@ -326,11 +326,11 @@ export const HomePage = () => {
               <div className={styles.recordBlock}>
                 <span className={styles.sectionLabel}>Professional development record</span>
                 <p className={styles.bodyText}>
-                  {recordSignalCount} journey signals are already recorded across reflection, insight, and classroom practice.
+                  {recordSignalCount} signals are already recorded across practice and reflection.
                 </p>
               </div>
 
-              <div className={styles.actions}>
+              <div className={`${styles.snapshotActions} ${styles.snapshotActionsSplit}`}>
                 <Link className={buttonClassName('secondary')} to={appRoutes.focusAreaById(currentFocus.id)}>
                   Open guidance
                 </Link>

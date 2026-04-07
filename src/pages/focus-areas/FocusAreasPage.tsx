@@ -52,12 +52,12 @@ export const FocusAreasPage = () => {
     <Layout>
       <SectionHeader
         title="Choose a focus area"
-        copy="Select one element of practice to strengthen through evidence summaries, classroom strategies, and short development cycles."
+        copy="Choose one area of practice to strengthen next."
       />
 
       <section className={styles.overviewStrip} aria-label="Focus area overview">
         <div className={`${styles.overviewCard} ${styles.overviewLead}`}>
-          <span className={styles.overviewLabel}>Active strand</span>
+          <span className={styles.overviewLabel}>Current focus</span>
           <strong className={styles.overviewValue}>{currentFocus.name}</strong>
           <p className={styles.overviewCopy}>
             {currentFocus.progressNotes}
@@ -71,14 +71,14 @@ export const FocusAreasPage = () => {
           </div>
         </div>
         <div className={`${styles.overviewCard} ${styles.overviewMini}`}>
-          <span className={styles.overviewLabel}>Started strands</span>
+          <span className={styles.overviewLabel}>Focus areas started</span>
           <strong className={styles.overviewValue}>{startedFocusCount}</strong>
-          <span className={styles.overviewHint}>Practice already underway.</span>
+          <span className={styles.overviewHint}>Practice underway.</span>
         </div>
         <div className={`${styles.overviewCard} ${styles.overviewMini}`}>
           <span className={styles.overviewLabel}>Available resources</span>
           <strong className={styles.overviewValue}>{totalResources}</strong>
-          <span className={styles.overviewHint}>Guides ready for the next trial.</span>
+          <span className={styles.overviewHint}>Guides ready to use.</span>
         </div>
       </section>
 
@@ -102,7 +102,7 @@ export const FocusAreasPage = () => {
                   <Tag label={isCurrentFocus ? 'Current focus' : 'Focus area'} />
                   <span className={styles.progressValue}>{progress.progress}%</span>
                 </div>
-                <span className={styles.code}>Teaching focus</span>
+                <span className={styles.code}>Focus area</span>
                 <h2 className={styles.title}>{focusArea.name}</h2>
                 <p className={styles.description}>{focusArea.description}</p>
               </div>
@@ -116,7 +116,7 @@ export const FocusAreasPage = () => {
 
               <div className={styles.cardFooter}>
                 <div className={styles.metricBlock}>
-                  <span className={styles.metricLabel}>Reflection record</span>
+                  <span className={styles.metricLabel}>Reflections</span>
                   <strong>
                     {reflectionCount === 0
                       ? 'No reflections yet'
@@ -124,12 +124,12 @@ export const FocusAreasPage = () => {
                   </strong>
                 </div>
                 <div className={styles.metricBlock}>
-                  <span className={styles.metricLabel}>Journey status</span>
+                  <span className={styles.metricLabel}>Status</span>
                   <strong>{isCurrentFocus ? 'Active this week' : 'Available to start'}</strong>
                 </div>
                 <div className={styles.metricBlock}>
-                  <span className={styles.metricLabel}>Resource bank</span>
-                  <strong>{focusArea.resources.length} linked support items</strong>
+                  <span className={styles.metricLabel}>Resources</span>
+                  <strong>{focusArea.resources.length} support items</strong>
                 </div>
               </div>
 

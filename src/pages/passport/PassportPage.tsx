@@ -59,14 +59,14 @@ export const PassportPage = () => {
     <Layout>
       <SectionHeader
         title="Professional development record"
-        copy="A running record of the evidence, practice, reflection, and goal-setting that make up your development cycle."
+        copy="A running record of evidence, practice, reflection, and goals."
       />
 
       <section className={styles.recordRibbon} aria-label="Professional record overview">
         <div className={`${styles.ribbonCard} ${styles.ribbonLead}`}>
-          <span className={styles.statLabel}>Professional record</span>
+          <span className={styles.statLabel}>Development record</span>
           <strong className={styles.statValueSmall}>
-            A concise archive of the evidence, reflection, and goals shaping your teaching development.
+            A concise record of the work shaping your teaching development.
           </strong>
           <div className={styles.ribbonHighlights}>
             <span className={styles.ribbonHighlight}>
@@ -84,44 +84,30 @@ export const PassportPage = () => {
           <div className={`${styles.ribbonCard} ${styles.ribbonMini}`}>
             <span className={styles.statLabel}>Entries logged</span>
             <strong className={styles.statValue}>{passportEntries.length}</strong>
-            <span className={styles.ribbonHint}>Captured across your current development cycle</span>
+            <span className={styles.ribbonHint}>Captured across the current cycle</span>
           </div>
           <div className={`${styles.ribbonCard} ${styles.ribbonMini}`}>
             <span className={styles.statLabel}>Latest activity</span>
             <strong className={styles.statValueSmall}>{latestEntryDate}</strong>
-            <span className={styles.ribbonHint}>Most recent update recorded in your passport</span>
+            <span className={styles.ribbonHint}>Most recent update in the record</span>
           </div>
           <div className={`${styles.ribbonCard} ${styles.ribbonMini}`}>
             <span className={styles.statLabel}>Current focus</span>
             <strong className={styles.statValueSmall}>{currentFocus.name}</strong>
-            <span className={styles.ribbonHint}>The teaching area you are strengthening right now</span>
+            <span className={styles.ribbonHint}>The area you are strengthening now</span>
           </div>
         </div>
       </section>
 
       <section className={styles.topGrid}>
         <div className={`${styles.panel} ${styles.heroPanel}`}>
-          <span className={styles.eyebrow}>Current record</span>
-          <h2 className={styles.panelTitle}>This term&apos;s professional development activity</h2>
+          <span className={styles.eyebrow}>This term</span>
+          <h2 className={styles.panelTitle}>Development activity</h2>
           <p className={styles.bodyText}>
-            Keep a concise record of how evidence has informed your focus, how that focus has been tried in the classroom, and what you are refining next.
+            Review the evidence, practice, and reflections shaping your current focus.
           </p>
           <div className={styles.archiveVisual} aria-hidden="true">
             <PassportRecordScene />
-          </div>
-          <div className={styles.statGrid}>
-            <div className={styles.statCard}>
-              <span className={styles.statLabel}>Record entries</span>
-              <strong className={styles.statValue}>{passportEntries.length}</strong>
-            </div>
-            <div className={styles.statCard}>
-              <span className={styles.statLabel}>Last update</span>
-              <strong className={styles.statValueSmall}>{latestEntryDate}</strong>
-            </div>
-            <div className={styles.statCard}>
-              <span className={styles.statLabel}>Current focus</span>
-              <strong className={styles.statValueSmall}>{currentFocus.name}</strong>
-            </div>
           </div>
         </div>
 
@@ -153,14 +139,14 @@ export const PassportPage = () => {
             <h3 className={styles.panelTitle}>Development activity log</h3>
           </div>
           <p className={styles.bodyText}>
-            Use this record to review how evidence and classroom practice are shaping your current development priority.
+            Review the activity shaping your current development priority.
           </p>
         </div>
 
         {passportEntries.length === 0 ? (
           <EmptyState
             title="No professional development activity yet"
-            copy="As you review evidence, try techniques, and write reflections, this record will build automatically."
+            copy="As you review evidence, try techniques, and write reflections, this record will build."
           />
         ) : (
           <div className={styles.timeline}>

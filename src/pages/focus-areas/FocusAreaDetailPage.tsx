@@ -54,7 +54,7 @@ export const FocusAreaDetailPage = () => {
       <Layout>
         <EmptyState
           title="Focus area not found"
-          copy="Choose another teaching focus to see evidence summaries, techniques, and resources."
+          copy="Choose another teaching focus to continue."
           action={
             <Link className={buttonClassName('secondary')} to={appRoutes.focusAreas}>
               Back to focus areas
@@ -119,7 +119,7 @@ export const FocusAreaDetailPage = () => {
           <div className={styles.titleRow}>
             <div className={styles.metaStack}>
               <Tag color={accentColor} label={isCurrentFocus ? 'Current focus' : 'Focus area'} />
-              <span className={styles.heroKicker}>Current development thread</span>
+              <span className={styles.heroKicker}>Current focus</span>
             </div>
             <span className={styles.progressValue}>{progress.progress}% complete</span>
           </div>
@@ -168,7 +168,7 @@ export const FocusAreaDetailPage = () => {
         <div className={`${styles.headerCard} ${styles.evidenceCard}`}>
           <div className={styles.sectionIntro}>
             <span className={styles.sectionKicker}>Evidence and next move</span>
-            <h3 className={styles.sectionTitle}>What to respond to next</h3>
+            <h3 className={styles.sectionTitle}>What to do next</h3>
           </div>
           <div className={styles.evidenceSummary}>
             <div className={styles.evidenceMeta}>
@@ -193,7 +193,7 @@ export const FocusAreaDetailPage = () => {
           </div>
           <div className={styles.workflowGrid}>
             <div className={styles.workflowBlock}>
-              <span className={styles.detailLabel}>Best next classroom move</span>
+              <span className={styles.detailLabel}>Suggested next move</span>
               <strong className={styles.workflowTitle}>
                 {suggestedTechnique ? suggestedTechnique.title : 'Review the current strategy'}
               </strong>
@@ -202,24 +202,24 @@ export const FocusAreaDetailPage = () => {
               </p>
             </div>
             <div className={styles.workflowBlock}>
-              <span className={styles.detailLabel}>Reflection handoff</span>
+              <span className={styles.detailLabel}>When you reflect next</span>
               <p className={styles.bodyText}>{reflectionHandoff}</p>
             </div>
             <div className={styles.workflowBlock}>
-              <span className={styles.detailLabel}>Keep in view</span>
+              <span className={styles.detailLabel}>Current goal</span>
               <strong className={styles.workflowTitle}>
                 {activeGoal ? activeGoal.title : focusArea.currentGoal}
               </strong>
               <p className={styles.bodyText}>
                 {latestReflectionDate
-                  ? `Last reflection saved ${latestReflectionDate}. Use that note to judge whether the next move is becoming more consistent.`
-                  : 'You do not need a long write-up. One short note after the lesson is enough to keep this cycle moving.'}
+                  ? `Last reflection saved ${latestReflectionDate}. Use it to judge what is becoming more consistent.`
+                  : 'One short note after the lesson is enough to keep this cycle moving.'}
               </p>
             </div>
           </div>
           <div className={styles.actions}>
             <Link className={buttonClassName('secondary')} to={reflectionPath}>
-              Reflect on best next move
+              Write reflection
             </Link>
             <Link className={buttonClassName('ghost')} to={appRoutes.focusAreas}>
               Back to all focus areas
@@ -232,7 +232,7 @@ export const FocusAreaDetailPage = () => {
         <SectionHeader
           compact
           title="Techniques"
-          copy="Practical classroom strategies to trial, notice, and refine as part of a development cycle."
+          copy="Practical classroom moves to try and refine."
         />
 
         {orderedTechniques.map((technique, index) => (
@@ -256,7 +256,7 @@ export const FocusAreaDetailPage = () => {
         <section className={styles.resourcesPanel}>
           <div className={styles.sectionIntro}>
             <span className={styles.sectionKicker}>Related resources</span>
-            <h3 className={styles.sectionTitle}>Keep the evidence close to practice</h3>
+            <h3 className={styles.sectionTitle}>Supporting resources</h3>
           </div>
           <div className={styles.resources}>
             {focusArea.resources.map((resource) => (

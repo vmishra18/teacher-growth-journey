@@ -123,7 +123,7 @@
 
 .summaryGrid {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 1.15rem;
   align-items: start;
   margin-bottom: 1.5rem;
@@ -134,22 +134,9 @@
   animation: sectionRise 500ms var(--ease-standard);
 }
 
-.heroCard {
-  display: grid;
-  align-content: start;
-}
-
 .actionCard {
   display: grid;
   align-content: start;
-}
-
-.cycleGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(10rem, 12rem));
-  gap: 0.8rem;
-  align-items: start;
-  justify-content: start;
 }
 
 .summaryCard {
@@ -186,7 +173,6 @@
   gap: 0.85rem;
 }
 
-.heroHeader,
 .sectionHeader {
   display: grid;
   gap: 0.32rem;
@@ -207,30 +193,11 @@
   font-weight: 600;
 }
 
-.heroMetric {
-  font-size: 1.55rem;
-  line-height: 1;
-  letter-spacing: -0.04em;
-}
-
 .bodyText {
   margin: 0;
   color: var(--text-muted);
   line-height: 1.78;
   max-width: 68ch;
-}
-
-.cycleStat {
-  display: grid;
-  gap: 0.28rem;
-  padding: 0.9rem 0 0.9rem 0.95rem;
-  border-radius: 0;
-  border: 0;
-  border-left: 1px solid var(--border);
-  background: transparent;
-  justify-items: start;
-  text-align: left;
-  align-content: start;
 }
 
 .statLabel {
@@ -341,14 +308,17 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 4.5rem;
-  padding: 0.38rem 0.72rem;
+  min-width: 3.9rem;
+  padding: 0.3rem 0.62rem;
   border-radius: 999px;
-  background: rgba(37, 99, 235, 0.08);
+  border: 1px solid var(--border);
+  background: var(--surface-glass-soft);
   color: var(--primary);
-  font-size: 0.95rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
 .progressLink {

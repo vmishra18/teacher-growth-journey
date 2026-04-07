@@ -45,14 +45,14 @@ export const ProgressPage = () => {
     <Layout>
       <SectionHeader
         title="Your progress"
-        copy="Review how your current focus is developing across the cycle, then decide what to practise next."
+        copy="Review your current focus and decide what to practise next."
       />
 
       <section className={styles.signalBoard}>
         <div className={styles.signalBoardHeader}>
           <div>
-            <span className={styles.eyebrow}>Signal board</span>
-            <h3 className={styles.cardTitle}>What the latest cycle is showing</h3>
+            <span className={styles.eyebrow}>Overview</span>
+            <h3 className={styles.cardTitle}>How this focus is going</h3>
           </div>
           <strong className={styles.signalFocus}>{currentFocus.name}</strong>
         </div>
@@ -76,10 +76,10 @@ export const ProgressPage = () => {
           </div>
 
           <div className={styles.signalFeatureContent}>
-            <span className={styles.signalFeatureEyebrow}>Progress guidance</span>
-            <h3 className={styles.signalFeatureTitle}>See where progress turns into the next classroom move</h3>
+            <span className={styles.signalFeatureEyebrow}>Next step</span>
+            <h3 className={styles.signalFeatureTitle}>What to do next</h3>
             <p className={styles.signalFeatureText}>
-              Review the signals from your current focus, keep your goal in view, and move into one practical next step without losing the thread of what is improving.
+              Look at the latest notes, keep the goal in mind, and decide what to try next.
             </p>
             <div className={styles.signalFeatureMeta}>
               <div className={styles.signalFeaturePoint}>
@@ -106,35 +106,11 @@ export const ProgressPage = () => {
       </section>
 
       <section className={styles.summaryGrid}>
-        <article className={`${styles.summaryCard} ${styles.heroCard}`}>
-          <div className={styles.heroHeader}>
-            <span className={styles.eyebrow}>Development cycle summary</span>
-            <strong className={styles.heroMetric}>This cycle</strong>
-          </div>
-          <p className={styles.bodyText}>
-            You’ve made steady progress in developing questioning through focused practice, reflection, and goal-setting.
-          </p>
-          <div className={styles.cycleGrid}>
-            <div className={styles.cycleStat}>
-              <span className={styles.statLabel}>Reflections</span>
-              <strong className={styles.statValue}>{cycleStats.reflections}</strong>
-            </div>
-            <div className={styles.cycleStat}>
-              <span className={styles.statLabel}>Insights</span>
-              <strong className={styles.statValue}>{cycleStats.insights}</strong>
-            </div>
-            <div className={styles.cycleStat}>
-              <span className={styles.statLabel}>Goals</span>
-              <strong className={styles.statValue}>{cycleStats.goals}</strong>
-            </div>
-          </div>
-        </article>
-
         <article className={`${styles.summaryCard} ${styles.actionCard}`}>
           <span className={styles.eyebrow}>Suggested next step</span>
-          <h3 className={styles.cardTitle}>Keep the cycle moving</h3>
+          <h3 className={styles.cardTitle}>What to do next</h3>
           <p className={styles.bodyText}>
-            Continue practising your current focus, then use reflection or the CPD passport to review what is becoming more consistent over time.
+            Continue practising your current focus, then review the record behind that progress.
           </p>
           <div className={styles.actions}>
             <Link className={buttonClassName('primary')} to={appRoutes.focusAreaById(currentFocus.id)}>
@@ -154,7 +130,7 @@ export const ProgressPage = () => {
             <h3 className={styles.cardTitle}>What is moving forward this week</h3>
           </div>
           <p className={styles.bodyText}>
-            Your current focus is <strong>{currentFocus.name}</strong>. Use the progress view to see where practice is building, and use the passport to review the record behind that progress.
+            Your current focus is <strong>{currentFocus.name}</strong>. Use this view to see where practice is building.
           </p>
         </div>
         <div className={styles.currentFocusStrip}>

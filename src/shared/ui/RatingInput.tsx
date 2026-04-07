@@ -8,7 +8,7 @@ interface RatingInputProps {
 
 export const RatingInput = ({ label, value, onChange }: RatingInputProps) => (
   <fieldset className={styles.group}>
-    <legend>{label}</legend>
+    <legend className={styles.legend}>{label}</legend>
     <div className={styles.options}>
       {[1, 2, 3, 4, 5].map((option) => (
         <label className={styles.option} key={option}>

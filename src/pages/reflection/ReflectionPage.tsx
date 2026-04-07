@@ -205,14 +205,14 @@ export const ReflectionPage = () => {
     setConfidence(3);
     clearReflectionDraft();
     setDraftMessage('');
-    setSavedMessage('Reflection saved. A new insight has been added to the development thread.');
+    setSavedMessage('Reflection saved. A follow-up insight has been added.');
   };
 
   return (
     <Layout>
       <SectionHeader
         title="Reflect on your practice"
-        copy="A short reflection helps you refine your development cycle, review impact, and decide the most useful next step."
+        copy="Capture what happened and decide the next move."
       />
 
       <div className={styles.grid}>
@@ -221,10 +221,10 @@ export const ReflectionPage = () => {
             <div className={styles.workspaceHeader}>
               <div className={styles.workspaceHero}>
                 <div className={styles.workspaceCopy}>
-                  <span className={styles.workspaceLabel}>Reflection studio</span>
-                  <h2 className={styles.workspaceTitle}>Capture the lesson while it is still fresh</h2>
+                  <span className={styles.workspaceLabel}>Reflection</span>
+                  <h2 className={styles.workspaceTitle}>Capture the lesson while it is fresh</h2>
                   <p className={styles.panelCopy}>
-                    This is a quieter workspace for turning one classroom moment into a clearer next step.
+                    Turn one classroom moment into a clear next step.
                   </p>
                   <div className={styles.workspaceMetaRow}>
                     <div className={styles.contextMeta}>
@@ -267,7 +267,7 @@ export const ReflectionPage = () => {
               <div className={styles.beforeWriteIntro}>
                 <span className={styles.eyebrow}>Before you write</span>
                 <p className={styles.panelCopy}>
-                  Keep one evidence cue, one comparison point, and one current goal in view.
+                  Keep one cue, one comparison point, and one goal in view.
                 </p>
               </div>
               <div className={styles.beforeWriteGrid}>
@@ -300,7 +300,7 @@ export const ReflectionPage = () => {
                     Set the lesson context
                   </h2>
                   <p className={styles.panelCopy}>
-                    Tie the note to one focus area and one classroom move.
+                    Tie the note to one focus and one classroom move.
                   </p>
                 </div>
               </div>
@@ -310,21 +310,23 @@ export const ReflectionPage = () => {
                   <label className={styles.label} htmlFor="focus-area-select">
                     Focus area
                   </label>
-                  <select
-                    aria-describedby="focus-area-hint"
-                    className={styles.select}
-                    id="focus-area-select"
-                    onChange={(event) => handleFocusChange(event.target.value)}
-                    value={selectedFocus.id}
-                  >
-                    {journey.focusAreas.map((focusArea) => (
-                      <option key={focusArea.id} value={focusArea.id}>
-                        {focusArea.name}
-                      </option>
-                    ))}
-                  </select>
+                  <div className={styles.selectWrap}>
+                    <select
+                      aria-describedby="focus-area-hint"
+                      className={styles.select}
+                      id="focus-area-select"
+                      onChange={(event) => handleFocusChange(event.target.value)}
+                      value={selectedFocus.id}
+                    >
+                      {journey.focusAreas.map((focusArea) => (
+                        <option key={focusArea.id} value={focusArea.id}>
+                          {focusArea.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                   <span className={styles.hint} id="focus-area-hint">
-                    Choose the teaching focus you are improving.
+                    Choose the focus you are improving.
                   </span>
                 </div>
 
@@ -332,24 +334,26 @@ export const ReflectionPage = () => {
                   <label className={styles.label} htmlFor="technique-select">
                     Technique used
                   </label>
-                  <select
-                    aria-describedby="technique-hint"
-                    className={styles.select}
-                    id="technique-select"
-                    onChange={(event) => handleTechniqueChange(event.target.value)}
-                    value={selectedTechniqueId}
-                  >
-                    <option value="">General focus reflection</option>
-                    {selectedFocus.techniques.map((technique) => (
-                      <option key={technique.id} value={technique.id}>
-                        {technique.title}
-                      </option>
-                    ))}
-                  </select>
+                  <div className={styles.selectWrap}>
+                    <select
+                      aria-describedby="technique-hint"
+                      className={styles.select}
+                      id="technique-select"
+                      onChange={(event) => handleTechniqueChange(event.target.value)}
+                      value={selectedTechniqueId}
+                    >
+                      <option value="">General focus reflection</option>
+                      {selectedFocus.techniques.map((technique) => (
+                        <option key={technique.id} value={technique.id}>
+                          {technique.title}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                   <span className={styles.hint} id="technique-hint">
                     {matchingTechnique
                       ? `Reflecting on: ${matchingTechnique.title}`
-                      : 'Choose a technique only if this reflection relates to one specific move.'}
+                      : 'Choose a technique only if this note relates to one specific move.'}
                   </span>
                 </div>
               </div>
@@ -382,7 +386,7 @@ export const ReflectionPage = () => {
                 value={wentWell}
               />
               <span className={styles.fieldHint} id="went-well-hint">
-                Name the strongest pupil response or moment of consistency you noticed.
+                Name the strongest response or moment of consistency you noticed.
               </span>
 
               <TextArea
@@ -395,7 +399,7 @@ export const ReflectionPage = () => {
                 value={improveNext}
               />
               <span className={styles.fieldHint} id="improve-next-hint">
-                Name the one adjustment you want to carry into the next lesson.
+                Name one adjustment to carry into the next lesson.
               </span>
             </section>
 
@@ -404,23 +408,23 @@ export const ReflectionPage = () => {
                 <span className={styles.stepBadge}>Step 3</span>
                 <div>
                   <h2 className={styles.panelTitle} id="reflection-step-next">
-                    Leave with one next move
+                    Plan the next lesson
                   </h2>
                   <p className={styles.panelCopy}>
-                    Saving this reflection will add a new insight to your development thread.
+                    Saving this note adds it to your history and creates a follow-up insight.
                   </p>
                 </div>
               </div>
 
               <div className={styles.handoffPanel}>
                 <div className={styles.handoffBlock}>
-                  <span className={styles.contextLabel}>Best next move to name</span>
+                  <span className={styles.contextLabel}>Next lesson adjustment</span>
                   <p className={styles.contextHint}>{nextMovePrompt}</p>
                 </div>
                 <div className={styles.handoffBlock}>
                   <span className={styles.contextLabel}>What will happen when you save</span>
                   <p className={styles.contextHint}>
-                    The note will be added to your reflection history and turned into a new insight ready for the next goal.
+                    The note will be added to your history and a follow-up insight will be created.
                   </p>
                 </div>
               </div>
@@ -441,11 +445,11 @@ export const ReflectionPage = () => {
           <div className={styles.history}>
             <div className={styles.historyHeader}>
               <div>
-                <span className={styles.eyebrow}>Development thread</span>
-                <h2 className={styles.panelTitle}>{selectedFocus.name} reflection history</h2>
+                <span className={styles.eyebrow}>Recent notes</span>
+                <h2 className={styles.panelTitle}>{selectedFocus.name} history</h2>
               </div>
               <p className={styles.panelCopy}>
-                Review recent reflections to see what is becoming more consistent, where feedback is pointing, and what needs refining next.
+                Review recent reflections, evidence, and follow-up notes in one place.
               </p>
             </div>
 
@@ -473,14 +477,14 @@ export const ReflectionPage = () => {
                         onClick={() => void createInsightFromEvidence(latestEvidence.id)}
                         variant="secondary"
                       >
-                        Turn into insight
+                        Add as insight
                       </Button>
                     </div>
                   ) : null}
                 </article>
               ) : (
                 <p className={styles.panelCopy}>
-                  No survey or observation notes are currently linked to this focus area.
+                  No survey or observation notes are linked to this focus area yet.
                 </p>
               )}
             </div>
@@ -514,7 +518,7 @@ export const ReflectionPage = () => {
                     onClick={() => void promoteInsightToGoal(latestInsight.id)}
                     variant="secondary"
                   >
-                    Turn into current goal
+                    Set as current goal
                   </Button>
                 </div>
               </article>
@@ -523,7 +527,7 @@ export const ReflectionPage = () => {
             {filteredReflections.length === 0 ? (
               <EmptyState
                 title="No reflections for this focus yet"
-                copy="Once a reflection is saved, it will appear here as part of the progress timeline."
+                copy="Saved reflections will appear here."
               />
             ) : (
               filteredReflections.map((reflection) => (

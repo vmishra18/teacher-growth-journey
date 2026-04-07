@@ -78,7 +78,7 @@ export const TechniqueCard = ({
               ) : null}
               {reflectionCue ? (
                 <div className={styles.workflowNote}>
-                  <span className={styles.workflowLabel}>Use in reflection</span>
+                  <span className={styles.workflowLabel}>Reflect on</span>
                   <p className={styles.workflowText}>{reflectionCue}</p>
                 </div>
               ) : null}

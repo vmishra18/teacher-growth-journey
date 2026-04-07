@@ -30,9 +30,9 @@ export const getRecommendedNextStep = (state: JourneyState): NextStepRecommendat
 
   if (currentFocus.id === 'questioning') {
     return {
-      title: 'Recommended next step',
+      title: 'Write a reflection',
       description:
-        'Reflect on your recent lesson using the questioning technique you selected.',
+        'Capture what happened in your most recent questioning lesson while it is still fresh.',
       path: buildTechniquePath(currentFocus.id, recentTriedTechnique?.id),
       actionLabel: 'Write reflection',
     };
@@ -42,7 +42,7 @@ export const getRecommendedNextStep = (state: JourneyState): NextStepRecommendat
     return {
       title: `Try ${progress.nextTechnique.title}`,
       description:
-        'You have guidance ready. Logging one classroom attempt is the fastest way to move from reading to deliberate practice.',
+        'You have the guidance ready. Try it in class next so you can see what works and what still needs adjusting.',
       path: appRoutes.focusAreaById(currentFocus.id),
       actionLabel: 'Open technique',
     };
@@ -53,9 +53,9 @@ export const getRecommendedNextStep = (state: JourneyState): NextStepRecommendat
     (!recentReflection || recentReflection.focusAreaId !== currentFocus.id)
   ) {
     return {
-      title: 'Capture a reflection while the lesson is fresh',
+      title: 'Write a quick reflection',
       description:
-        'A short reflection will turn your recent classroom try into a clearer next step for the next lesson.',
+        'A short note now will make it easier to decide what to repeat or change next lesson.',
       path: buildTechniquePath(currentFocus.id, recentTriedTechnique.id),
       actionLabel: 'Reflect now',
     };
@@ -65,16 +65,16 @@ export const getRecommendedNextStep = (state: JourneyState): NextStepRecommendat
     return {
       title: `Build consistency with ${progress.nextTechnique.title}`,
       description:
-        'You have started this focus area. Adding one more technique will broaden your repertoire without increasing planning load too much.',
+        'You have already started this focus area. Trying one more technique will help you see which approach fits best in class.',
       path: appRoutes.focusAreaById(currentFocus.id),
       actionLabel: 'See techniques',
     };
   }
 
   return {
-    title: `Review progress in ${currentFocus.name}`,
+    title: `Review your progress in ${currentFocus.name}`,
     description:
-      'Your recent practice is building momentum. Check the timeline and decide which refinement to prioritise next.',
+      'Look back over your recent notes and decide what to keep working on next.',
     path: appRoutes.progress,
     actionLabel: 'View progress',
   };

@@ -29,7 +29,7 @@ describe('ReflectionPage', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText(/Reflection saved\. A new insight has been added to the development thread\./i),
+        screen.getByText(/Reflection saved\. A follow-up insight has been added\./i),
       ).toBeInTheDocument();
     });
 
@@ -52,7 +52,7 @@ describe('ReflectionPage', () => {
       (await screen.findAllByText(/Pupils say they need longer thinking time before answering/i)).length,
     ).toBeGreaterThan(0);
 
-    await userEvent.click(screen.getByRole('button', { name: /Turn into insight/i }));
+    await userEvent.click(screen.getByRole('button', { name: /Add as insight/i }));
 
     await waitFor(() => {
       expect(screen.getAllByText(/Increase wait time more consistently/i).length).toBeGreaterThan(0);
